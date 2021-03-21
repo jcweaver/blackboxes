@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 
 
 class PredictModels(object):
-
+    ##### PRIVATE 
     def __init__(self, model_dir,pred_dir, ids, verbose = False):
         
         # validate that the constructor parameters were provided by caller
@@ -59,6 +59,9 @@ class PredictModels(object):
         
         return model
 
+    #######################################
+    # Generate Predictions
+    #######################################
     def __generate_prediction(self, model_name, Y, test, columns="Full", verbose = True):
 
         id_lookup = self.__ids
@@ -101,7 +104,10 @@ class PredictModels(object):
         Y.to_csv(new_file, index = False)
         print("Predictions written ")
 
-
+    ##### PUBLIC 
+    #######################################
+    # Print paths
+    #######################################
     def print_paths(self):
         print("Model dir:", self.__model_dir)
         print("Pickle dir:", self.__pred_dir)

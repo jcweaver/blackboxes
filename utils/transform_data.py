@@ -10,7 +10,7 @@ import pickle
 import os.path
 
 class TransformData(object):
-
+    ##### PRIVATE
     #Let's make this easy for everyone to use since we all have different paths for our files
     #pickles_path - file where all the yummy pickle files are
     def __init__(self, scale = 255.0, reshape = 96, verbose = False):
@@ -36,7 +36,6 @@ class TransformData(object):
 
     #Rakesh to add rotate, etc. 
 
-    ##Private
     def __get_coordinate_columns(df, x = True, y = True):
 
         if x & y:
@@ -98,8 +97,9 @@ class TransformData(object):
 
         return coord
 
-    ##Public
-
+    
+    ##### PUBLIC
+       
     #NOT TESTED
     def FlipHorizontal(self, train, verbose = False):
         #Flip the iages horizontaly and adjust the labels. 

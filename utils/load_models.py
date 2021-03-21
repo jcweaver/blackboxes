@@ -34,7 +34,7 @@ def get_GPU_count():
     return GPU_count
 
 class LoadTrainModels(object):
-
+    ##### PRIVATE
     def __init__(self, model_dir, pickle_path, verbose = False):
         
         # validate that the constructor parameters were provided by caller
@@ -199,6 +199,11 @@ class LoadTrainModels(object):
             #TODO need to add history file here. 
         return model, history
 
+    ###### PUBLIC
+    
+    #######################################
+    # PRINT PATHS
+    #######################################
     def print_paths(self):
         print("Model dir:", self.__model_dir)
         print("Pickle dir:", self.__pickle_file_path)
