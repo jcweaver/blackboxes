@@ -179,10 +179,7 @@ class LoadTrainModels(object):
             model_json = compliled_model.to_json()
             with open(model_json_file, "w") as json_file:
                 json_file.write(model_json)
-        
-            #__history_plot_file = "".join([nested_dir, feature_name, __MODEL_SUFFIX, "_plot.png"])
-            
-            
+                       
             #history_param_file = "".join([full_path, model_name,"_hparam.csv"])
             #history_params = pd.DataFrame(history.params)
             #history_params.to_csv(history_param_file)
@@ -230,3 +227,4 @@ class LoadTrainModels(object):
         model, history = self.__get_model_lenet5(model_name, X = X, Y = Y, l_batch_size = 128, l_epochs = 300, l_shuffle = True)
         
         return model, history
+
