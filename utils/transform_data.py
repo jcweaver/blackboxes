@@ -195,14 +195,14 @@ class TransformData(object):
         return X, Y
         
 
-    def SplitTest(self, test, verbose = False):
+    def SplitTest(self, test, ids, verbose = False):
         
         if verbose:
             print("Begining the split of Test")
 
-        print("loading pickle file")
-        id_lookup = pickle.load( open( "../Data/id_lookup.p", "rb" ) )
-        print("pickle file loaded")
+        
+        id_lookup = ids
+    
 
         #Get the unique image id's. 
         unique_ids = id_lookup.image_id.unique()

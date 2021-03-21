@@ -14,8 +14,6 @@ from keras.layers import Activation, Convolution2D, Conv2D, LocallyConnected2D, 
 from keras.callbacks import ReduceLROnPlateau, ModelCheckpoint, EarlyStopping
 from keras.optimizers import Adam
 from keras.regularizers import l2
-#from keras.utils import multi_gpu_model
-#from keras.initializers import glorot_uniform, Constant, lecun_uniform
 from keras import backend as K
 import tensorflow as tf
 import matplotlib.pyplot as plt
@@ -78,11 +76,11 @@ class LoadTrainModels(object):
     #######################################
     def __load_model_from_file(self,model_name, model_file, model_json, verbose = False):
 
-        model_filename = "".join((self.__model_dir, model_file))
-        model_json = "".join((self.__model_dir, model_json))
+        #model_filename = "".join((self.__model_dir, model_file))
+        #model_json = "".join((self.__model_dir, model_json))
 
-        if not os.path.isfile(model_filename):
-            raise RuntimeError(f"Model file {model_filename} does not exist.")
+        if not os.path.isfile(model_file):
+            raise RuntimeError(f"Model file {model_file} does not exist.")
         if not os.path.isfile(model_json):
             raise RuntimeError(f"Model file {model_json} does not exist." )
 
@@ -101,15 +99,9 @@ class LoadTrainModels(object):
     # Get Models
     #######################################
     def __get_model_lenet5(self,model_name, X, Y, l_batch_size, l_epochs, l_validation_split = .01, x_val = None, y_val = None, l_shuffle = True, verbose = True):
-
-        full_path = self.__model_dir
-
-        #Check the path, if it doesn't exist create it so we can save the model there later.
-        if not os.path.exists(full_path):
-            os.makedirs(full_path)
-
-        model_file_name = "".join([full_path, model_name,".h5"])
-        model_json_file = "".join([full_path, model_name,".json"])
+        
+        model_file_name = "".join([self.__model_dir, model_name,".h5"])
+        model_json_file = "".join([self.__model_dir, model_name,".json"])
         
         if verbose: 
             print("Looking for model LeNet5")
@@ -164,19 +156,8 @@ class LoadTrainModels(object):
 
             if verbose: 
                 print(model.summary())
-
-            #Check the GPU situation since the team is using different systems
-            if GPU_count > 1:
-                strategy = tf.distribute.MirroredStrategy()
-                with strategy.scope():
-                    if verbose: print("Yay GPU's found")
-                    #keras multi_gpu_model let's use it if we have it
-                    #https://rdrr.io/cran/keras/man/multi_gpu_model.html
-                    compliled_model = multi_gpu_model(model, gpus = GPU_count)
-            else:
-                #ug we don't have any GPUs..that's okay. 
-                print("No GPU's")
-                compliled_model = model
+          
+            compliled_model = model
 
             #play with these numbers.....
             #https://keras.io/api/models/model_training_apis/
@@ -202,20 +183,20 @@ class LoadTrainModels(object):
             #__history_plot_file = "".join([nested_dir, feature_name, __MODEL_SUFFIX, "_plot.png"])
             
             
-            history_param_file = "".join([full_path, model_name,"_hparam.csv"])
-            history_params = pd.DataFrame(history.params)
-            history_params.to_csv(history_param_file)
+            #history_param_file = "".join([full_path, model_name,"_hparam.csv"])
+            #history_params = pd.DataFrame(history.params)
+            #history_params.to_csv(history_param_file)
 
-            history_file = "".join([full_path, model_name,"_hist.csv"])
-            hist = pd.DataFrame(history.history)
-            hist.to_csv(history_file)
+            #history_file = "".join([full_path, model_name,"_hist.csv"])
+            #hist = pd.DataFrame(history.history)
+            #hist.to_csv(history_file)
 
             if verbose:
                 print(f"{model_name} model created and file saved for future use.")
         else:
             #We already have a model file, so retrieve and return it. 
             model = self.__load_model_from_file(model_name, model_file_name, model_json_file, verbose = True)
-
+            #TODO need to add history file here. 
         return model, history
 
     def print_paths(self):
