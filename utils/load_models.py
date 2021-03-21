@@ -1,4 +1,3 @@
-#%%
 #######################################
 # Load Imports
 #######################################
@@ -6,7 +5,6 @@
 import pandas as pd
 import numpy as np
 import transform_data
-
 import argparse
 import pickle
 import os
@@ -16,11 +14,12 @@ from keras.layers import Activation, Convolution2D, Conv2D, LocallyConnected2D, 
 from keras.callbacks import ReduceLROnPlateau, ModelCheckpoint, EarlyStopping
 from keras.optimizers import Adam
 from keras.regularizers import l2
-from keras.utils import multi_gpu_model
-from keras.initializers import glorot_uniform, Constant, lecun_uniform
+#from keras.utils import multi_gpu_model
+#from keras.initializers import glorot_uniform, Constant, lecun_uniform
 from keras import backend as K
-from sklearn.model_selection import train_test_split
 import tensorflow as tf
+import matplotlib.pyplot as plt
+
 
 np.random.seed(42)
 tf.random.set_seed(42)
@@ -31,18 +30,59 @@ physical_devices = tf.config.list_physical_devices('GPU')
 for pd_dev in range(len(physical_devices)):
     tf.config.experimental.set_memory_growth(physical_devices[pd_dev], True)
 
-#%%
+
 def get_GPU_count():
     GPU_count = len(tf.config.list_physical_devices('GPU'))
     return GPU_count
 
-#######################################
-# Load Models
-#######################################
-def load_model_from_file(model_name, model_file, model_json, verbose = False):
+class LoadTrainModels(object):
+
+    def __init__(self, model_dir, pickle_path, verbose = False):
         
-        if not os.path.isfile(model_file):
-            raise RuntimeError(f"Model file {model_file} does not exist.")
+        # validate that the constructor parameters were provided by caller
+        #I don't think we need the pickle path in here...but keep this code because 
+        #I'll want to reuse this elsewhere. 
+        if (not pickle_path):
+            raise RuntimeError('Please provide a path to the pickle files.')
+        
+        #Get a clean path...didn't work for me on first try because of spaces. 
+        pickle_path = str(pickle_path).replace('\\', '/').strip()
+        if (not pickle_path.endswith('/')): 
+            pickle_path = ''.join((pickle_path, '/'))
+
+        #Let's make sure all is good in the world and we can find the path
+        if (not os.path.isdir(pickle_path)):
+            raise RuntimeError("Path of pickle files '%s' is invalid. Please resolve and try again." % pickle_path)
+
+        if (not model_dir):
+            raise RuntimeError('Please provide a path to the model files.')
+        
+        #Get a clean path...didn't work for me on first try because of spaces. 
+        model_dir = str(model_dir).replace('\\', '/').strip()
+        if (not model_dir.endswith('/')): 
+            model_dir = ''.join((model_dir, '/'))
+
+        #Let's make sure all is good in the world and we can find the path
+        if (not os.path.isdir(model_dir)):
+            os.makedirs(model_dir)
+        
+        if (not os.path.isdir(model_dir)):
+            raise RuntimeError("Path of model files '%s' is invalid. Please resolve and try again." % model_dir)
+
+        self.__pickle_file_path = pickle_path #Do we need this? not sure but for now let's keep it. 
+        self.__model_dir = model_dir
+
+    
+    #######################################
+    # Load Models
+    #######################################
+    def __load_model_from_file(self,model_name, model_file, model_json, verbose = False):
+
+        model_filename = "".join((self.__model_dir, model_file))
+        model_json = "".join((self.__model_dir, model_json))
+
+        if not os.path.isfile(model_filename):
+            raise RuntimeError(f"Model file {model_filename} does not exist.")
         if not os.path.isfile(model_json):
             raise RuntimeError(f"Model file {model_json} does not exist." )
 
@@ -57,135 +97,150 @@ def load_model_from_file(model_name, model_file, model_json, verbose = False):
         
         return model
 
-#######################################
-# Get Models
-#######################################
-def get_model_lenet5(model_path, X, Y, l_batch_size, l_epochs, l_validation_split = .01, x_val = None, y_val = None, l_shuffle = True, verbose = True):
+    #######################################
+    # Get Models
+    #######################################
+    def __get_model_lenet5(self,model_name, X, Y, l_batch_size, l_epochs, l_validation_split = .01, x_val = None, y_val = None, l_shuffle = True, verbose = True):
 
-    model_name= "LeNet5"
-    full_path = "".join([model_path,"Jackie_Lenet5/"])
+        full_path = self.__model_dir
 
-    #Check the path, if it doesn't exist create it so we can save the model there later.
-    if not os.path.exists(full_path):
-        os.makedirs(full_path)
+        #Check the path, if it doesn't exist create it so we can save the model there later.
+        if not os.path.exists(full_path):
+            os.makedirs(full_path)
 
-    model_file_name = "".join([full_path, "Lenet5.h5"])
-    model_json_file = "".join([full_path, "Lenet5.json"])
-    
-    if verbose: 
-        print("Looking for model LeNet5")
-
-    # Create or load the model
-    if (not os.path.isfile(model_file_name)) or (not os.path.isfile(model_json_file)):
+        model_file_name = "".join([full_path, model_name,".h5"])
+        model_json_file = "".join([full_path, model_name,".json"])
+        
         if verbose: 
-            print("LeNet5 model file not found. Model creation begnining")
+            print("Looking for model LeNet5")
 
-        GPU_count = len(tf.config.list_physical_devices('GPU'))
+        # Create or load the model
+        if (not os.path.isfile(model_file_name)) or (not os.path.isfile(model_json_file)):
+            if verbose: 
+                print("LeNet5 model file not found. Model creation begnining")
 
-        #create a model and return it? or save it? 
-        #act = Adam(lr = 0.01, beta_1 = 0.9, beta_2 = 0.1, epsilon = 1e-8)
-        act = Adam(lr = 0.001, beta_1 = 0.9, beta_2 = 0.999, epsilon = 1e-8)
-        lss = 'mean_squared_error'
-        mtrc = ['mae','mse']
+                GPU_count = len(tf.config.list_physical_devices('GPU'))
 
-        stop_at = np.max([int(0.1 * epoch_count), self.__MIN_early_stopping])
-        es = EarlyStopping(patience = stop_at, verbose = verbose)
-        cp = ModelCheckpoint(filepath = __model_file_name, verbose = verbose, save_best_only = True, 
-            mode = 'min', monitor = 'val_mae')
+            #create a model and return it? or save it? 
+            #act = Adam(lr = 0.01, beta_1 = 0.9, beta_2 = 0.1, epsilon = 1e-8)
+            act = Adam(lr = 0.001, beta_1 = 0.9, beta_2 = 0.999, epsilon = 1e-8)
+            lss = 'mean_squared_error'
+            mtrc = ['mae','mse']
 
-        if GPU_count > 1: 
-            dev = "/cpu:0"
-        else: 
-            dev = "/gpu:0"
-        with tf.device(dev):
+            stop_at = np.max([int(0.1 * l_epochs), 10])
+            es = EarlyStopping(patience = stop_at, verbose = verbose)
+            cp = ModelCheckpoint(filepath = model_file_name, verbose = verbose, save_best_only = True, 
+                mode = 'min', monitor = 'val_mae')
 
-            model = Sequential()
+            if GPU_count > 1: 
+                dev = "/cpu:0"
+            else: 
+                dev = "/gpu:0"
+            with tf.device(dev):
 
-            #Add layers
-            model.add(Convolution2D(filters = 6, kernel_size = (3, 3), input_shape = (96, 96, 1)))
-            model.add(ReLU())
-            model.add(AveragePooling2D())
-            #model.add(Dropout(0.2))
+                model = Sequential()
 
-            model.add(Convolution2D(filters = 16, kernel_size = (3, 3)))
-            model.add(ReLU())
-            model.add(AveragePooling2D())
-            #model.add(Dropout(0.2))
-            model.add(Flatten())
-            model.add(Dense(512))
-            model.add(ReLU())
+                #Add layers
+                model.add(Convolution2D(filters = 6, kernel_size = (3, 3), input_shape = (96, 96, 1)))
+                model.add(ReLU())
+                model.add(AveragePooling2D())
+                #model.add(Dropout(0.2))
+
+                model.add(Convolution2D(filters = 16, kernel_size = (3, 3)))
+                model.add(ReLU())
+                model.add(AveragePooling2D())
+                #model.add(Dropout(0.2))
+                model.add(Flatten())
+                model.add(Dense(512))
+                model.add(ReLU())
+                
+                model.add(Dense(256))
+                model.add(ReLU())
+                
+                #30 features or #8 features. not sure which works better yet
+                model.add(Dense(30))
+                #model.add(Dense(8))
+                
+
+            if verbose: 
+                print(model.summary())
+
+            #Check the GPU situation since the team is using different systems
+            if GPU_count > 1:
+                strategy = tf.distribute.MirroredStrategy()
+                with strategy.scope():
+                    if verbose: print("Yay GPU's found")
+                    #keras multi_gpu_model let's use it if we have it
+                    #https://rdrr.io/cran/keras/man/multi_gpu_model.html
+                    compliled_model = multi_gpu_model(model, gpus = GPU_count)
+            else:
+                #ug we don't have any GPUs..that's okay. 
+                print("No GPU's")
+                compliled_model = model
+
+            #play with these numbers.....
+            #https://keras.io/api/models/model_training_apis/
+            compliled_model.compile(optimizer = act, loss = lss, metrics = mtrc)
+
+            if verbose: print("Done compiling")
             
-            model.add(Dense(256))
-            model.add(ReLU())
-            
-            #30 features or #8 features. not sure which works better yet
-            model.add(Dense(30))
-            #model.add(Dense(8))
-            
+            #https://keras.io/api/models/model_training_apis/
+            #Validation data will override validation split so okay to include both
+            #This return a history object:
+            # A History object. Its History.history attribute is a record of training loss values and metrics values at successive epochs, as well as validation loss values and validation metrics values (if applicable).
+            # Might be interesting to plot this....TBD
+            history = compliled_model.fit(X, Y, validation_split = l_validation_split, batch_size = l_batch_size * GPU_count, epochs = l_epochs, shuffle = l_shuffle, callbacks = [es, cp], verbose = verbose)
+            if verbose: print("Done fitting")
+            #This one does not like the none values for x_val and y_val...
+            #history = compliled_model.fit(X, Y, validation_split = l_validation_split, validation_data = (x_val, y_val), batch_size = l_batch_size * GPU_count, epochs = l_epochs, shuffle = l_shuffle, callbacks = [es, cp], verbose = verbose)
 
-        if verbose: 
-            print(model.summary())
+            #Save the model and we can version these ... might want to make it so I can modify the names for different versions and configs??
+            model_json = compliled_model.to_json()
+            with open(model_json_file, "w") as json_file:
+                json_file.write(model_json)
+        
+            #__history_plot_file = "".join([nested_dir, feature_name, __MODEL_SUFFIX, "_plot.png"])
+            
+            
+            history_param_file = "".join([full_path, model_name,"_hparam.csv"])
+            history_params = pd.DataFrame(history.params)
+            history_params.to_csv(history_param_file)
 
-        #Check the GPU situation since the team is using different systems
-        if GPU_count > 1:
-            strategy = tf.distribute.MirroredStrategy()
-            with strategy.scope():
-                #keras multi_gpu_model let's use it if we have it
-                #https://rdrr.io/cran/keras/man/multi_gpu_model.html
-                compliled_model = multi_gpu_model(model, gpus = GPU_count)
+            history_file = "".join([full_path, model_name,"_hist.csv"])
+            hist = pd.DataFrame(history.history)
+            hist.to_csv(history_file)
+
+            if verbose:
+                print(f"{model_name} model created and file saved for future use.")
         else:
-            #ug we don't have any GPUs..that's okay. 
-            compliled_model = model
+            #We already have a model file, so retrieve and return it. 
+            model = self.__load_model_from_file(model_name, model_file_name, model_json_file, verbose = True)
 
-        #play with these numbers.....
-        #https://keras.io/api/models/model_training_apis/
-        compliled_model.compile(optimizer = act, loss = lss, metrics = mtrc)
+        return model, history
 
+    def print_paths(self):
+        print("Model dir:", self.__model_dir)
+        print("Pickle dir:", self.__pickle_file_path)
 
-        
-        #https://keras.io/api/models/model_training_apis/
-        #Validation data will override validation split so okay to include both
-        #This return a history object:
-        # A History object. Its History.history attribute is a record of training loss values and metrics values at successive epochs, as well as validation loss values and validation metrics values (if applicable).
-        # Might be interesting to plot this....TBD
-        history = compliled_model.fit(X, Y, validation_split = l_validation_split, validation_data = (x_val, y_val), batch_size = l_batch_size * GPU_count, 
-                epochs = l_epochs, shuffle = l_shuffle, callbacks = [es, cp], verbose = verbose)
-
-        #Save the model and we can version these ... might want to make it so I can modify the names for different versions and configs??
-        model_json = compliled_model.to_json()
-        with open(model_json_file, "w") as json_file:
-            json_file.write(model_json)
     
-        if verbose:
-            print(f"{model_name} model created and file saved for future use.")
-    else:
-        #We already have a model file, so retrieve and return it. 
-        model = load_model_from_file(model_name, model_file_name, model_json_file, verbose = True)
 
+    #######################################
+    # Train Models
+    #######################################
+    def train_lenet5(self, model_name, train, split=True, X=None, Y=None, verbose = True):
 
-    return model
-
-
-# %%
-#######################################
-# Train Models
-#######################################
-def train_lenet5(model_path):
-
-    #do the split here and pass in parameters
-
-    model = get_model_lenet5(model_path, X, Y)
-
-
-
-# %%
-#######################################
-# Main - if needed
-#######################################
-if __name__ == "__main__":
+        data_transform = transform_data.TransformData(verbose=True)
+        #Scale train
+        train_scaled = data_transform.ScaleImages(train, verbose = True)
         
-    
-    print("hello")
-    print(get_GPU_count())
-# %%
-
+        #Split train and scale accordingly
+        # #do the split here and pass in parameters
+        if(split):
+            X, Y = data_transform.SplitTrain(train_scaled)
+        elif X is None | Y is None:
+            raise RuntimeError(f"When Split is set to False, X and Y must be supplied." )
+        
+        #Get and compile the model. 
+        model, history = self.__get_model_lenet5(model_name, X = X, Y = Y, l_batch_size = 128, l_epochs = 300, l_shuffle = True)
+        
+        return model, history
