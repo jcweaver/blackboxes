@@ -12,7 +12,7 @@ from keras.layers.advanced_activations import LeakyReLU, ELU, ReLU
 from keras.models import Sequential, Model, model_from_json
 from keras.layers import Activation, Convolution2D, Conv2D, LocallyConnected2D, MaxPooling2D, AveragePooling2D, GlobalAveragePooling2D, BatchNormalization, Flatten, Dense, Dropout, Input, concatenate, add, Add, ZeroPadding2D, GlobalMaxPooling2D, DepthwiseConv2D
 from keras.callbacks import ReduceLROnPlateau, ModelCheckpoint, EarlyStopping
-from keras.optimizers import Adam
+from keras.optimizers import Adam, SGD
 from keras.regularizers import l2
 from keras import backend as K
 import tensorflow as tf
@@ -32,6 +32,19 @@ for pd_dev in range(len(physical_devices)):
 def get_GPU_count():
     GPU_count = len(tf.config.list_physical_devices('GPU'))
     return GPU_count
+
+def plot_history(hist):
+    #Return value hist from the model fit can be used to plot
+    plt.plot(hist.history['loss'], linewidth=3, label='train')
+    plt.plot(hist.history['val_loss'], linewidth=3, label='valid')
+    plt.grid()
+    plt.legend()
+    plt.title("Loss vs epoch number")
+    plt.xlabel('epoch')
+    plt.ylabel('loss')
+    #plt.ylim(1e-3, 1e-2)
+    #plt.yscale('log')
+    plt.show()
 
 class LoadTrainModels(object):
     ##### PRIVATE
@@ -195,6 +208,105 @@ class LoadTrainModels(object):
             model = self.__load_model_from_file(model_name, model_file_name, model_json_file, verbose = True)
             #TODO need to add history file here. 
         return model, history
+    
+    
+    
+    def __get_model_jcw(self,model_name, X, Y, l_batch_size, l_epochs, l_validation_split = .2, x_val = None, y_val = None, l_shuffle = True, verbose = True):
+        
+        model_file_name = "".join([self.__model_dir, model_name,".h5"])
+        model_json_file = "".join([self.__model_dir, model_name,".json"])
+        
+        if verbose: 
+            print("Looking for model JW")
+
+        # Create or load the model
+        if (not os.path.isfile(model_file_name)) or (not os.path.isfile(model_json_file)):
+            if verbose: 
+                print("JW model file not found. Model creation beginning")
+
+                GPU_count = len(tf.config.list_physical_devices('GPU'))
+
+            #create a model and return it? or save it? 
+            act = Adam(lr = 0.001, beta_1 = 0.9, beta_2 = 0.999, epsilon = 1e-8)
+            sgd = SGD(lr=0.005, momentum=0.9, nesterov=True) 
+            lss = 'mean_squared_error'
+            mtrc = ['mae','mse']
+            
+            #Used for the fitting step
+            stop_at = np.max([int(0.1 * l_epochs), 10])
+            es = EarlyStopping(patience = stop_at, verbose = verbose)
+            cp = ModelCheckpoint(filepath = model_file_name, verbose = verbose, save_best_only = True, 
+                mode = 'min', monitor = 'val_mae')
+
+            if GPU_count > 1: 
+                dev = "/cpu:0"
+            else: 
+                dev = "/gpu:0"
+            with tf.device(dev):
+
+                model = Sequential()
+
+                #Add layers
+                model.add(Convolution2D(32, 3, 3, input_shape=(96, 96,1), data_format='channels_last', use_bias=False))
+                model.add(Activation('relu'))
+                # we apply batch normalization, which applies a transformation that maintains
+                # the mean output close to 0 and the output standard deviation close to 1
+                model.add(BatchNormalization()) 
+                model.add(MaxPooling2D(pool_size=(2, 2)))
+
+                model.add(Convolution2D(64, 2, 2, use_bias=False))
+                model.add(Activation('relu'))
+                model.add(BatchNormalization()) 
+                model.add(MaxPooling2D(pool_size=(2, 2)))
+
+                model.add(Convolution2D(128, 2, 2, use_bias=False))
+                model.add(Activation('relu'))
+                model.add(BatchNormalization()) 
+                model.add(MaxPooling2D(pool_size=(2, 2)))
+
+                #Flatten transforms the fully connected layer so it can be read
+                model.add(Flatten())
+                model.add(Dense(512))
+                model.add(Activation('relu'))
+                model.add(Dense(512))
+                model.add(Activation('relu'))
+                model.add(Dense(30))
+                
+
+            if verbose: 
+                print(model.summary())
+          
+            compiled_model = model
+
+            #play with these numbers.....
+            #https://keras.io/api/models/model_training_apis/
+            compiled_model.compile(optimizer = act, loss = lss, metrics = mtrc)
+
+            if verbose: print("Done compiling")
+            
+            #https://keras.io/api/models/model_training_apis/
+            #Validation data will override validation split so okay to include both
+            #This return a history object:
+
+            history = compiled_model.fit(X, Y, validation_split = l_validation_split, batch_size = l_batch_size * GPU_count, epochs = l_epochs, shuffle = l_shuffle, callbacks = [es, cp], verbose = verbose)
+            if verbose: print("Done fitting")
+            
+
+            #Save the model and we can version these ... might want to make it so I can modify the names for different versions and configs??
+            model_json = compiled_model.to_json()
+            with open(model_json_file, "w") as json_file:
+                json_file.write(model_json)
+        
+            #Plotting history
+            plot_history(history)
+
+            if verbose:
+                print(f"{model_name} model created and file saved for future use.")
+        else:
+            #We already have a model file, so retrieve and return it. 
+            model = self.__load_model_from_file(model_name, model_file_name, model_json_file, verbose = True)
+            #TODO need to add history file here. 
+        return model, history
 
     ###### PUBLIC
     
@@ -225,6 +337,24 @@ class LoadTrainModels(object):
         
         #Get and compile the model. 
         model, history = self.__get_model_lenet5(model_name, X = X, Y = Y, l_batch_size = 128, l_epochs = 300, l_shuffle = True)
+        
+        return model, history
+    
+    def train_jcw(self, model_name, train, split=True, X=None, Y=None, verbose = True):
+
+        data_transform = transform_data.TransformData(verbose=True)
+        #Scale train
+        train_scaled = data_transform.ScaleImages(train, verbose = True)
+        
+        #Split train and scale accordingly
+        # #do the split here and pass in parameters
+        if(split):
+            X, Y = data_transform.SplitTrain(train_scaled)
+        elif X is None | Y is None:
+            raise RuntimeError(f"When Split is set to False, X and Y must be supplied." )
+        
+        #Get and compile the model. 
+        model, history = self.__get_model_jcw(model_name, X = X, Y = Y, l_batch_size = 128, l_epochs = 300, l_shuffle = True)
         
         return model, history
 

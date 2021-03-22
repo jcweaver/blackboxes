@@ -150,3 +150,40 @@ class PredictModels(object):
         #Generate Predictions
         self.__generate_prediction(model_name, Y, test, columns="Full")
         return Y
+    
+        
+    def predict_jcw(self, model_name,model_file, model_json, test, scale = True, X=None, verbose = False):
+        
+        model_file_name = "".join([self.__model_dir, model_file])
+        model_json_file = "".join([self.__model_dir, model_json])
+
+        clean_test = test.drop(['index', 'check_sum'], axis=1, errors='ignore')
+        data_transform = transform_data.TransformData(verbose=True)
+        if scale:
+            test_scaled = data_transform.ScaleImages(test, True)
+            X, test_subset = data_transform.SplitTest(test_scaled,self.__ids, verbose = True)
+        
+        # Create or load the model
+        if (not os.path.isfile(model_file_name)) or (not os.path.isfile(model_json_file)):
+            if verbose: 
+                print("JCW model file not found. ")
+            raise RuntimeError("One or some of the following files are missing; prediction cancelled:\n\n'%s'\n'%s'\n" %(model_file_name, model_json_file))
+
+        if verbose: 
+            print("Loading model:", model_file_name)
+        
+        # predict
+        model = self.__load_model_from_file(model_name, model_file_name, model_json_file, verbose = False)
+        if verbose: 
+            print("Predicting %d (x,y) coordinates" % (len(X)))
+        
+        if verbose: 
+            print("Predicting model:", model_file_name)
+        Y = model.predict(X, verbose = verbose)
+
+        if verbose: 
+            print("Predictions complete!")
+        
+        #Generate Predictions
+        self.__generate_prediction(model_name, Y, test, columns="Full")
+        return Y
