@@ -322,6 +322,26 @@ class LoadTrainModels(object):
     #######################################
     # Train Models
     #######################################
+    def train_model(self, model_name, train, split=True, X=None, Y=None, verbose = True):
+
+        data_transform = transform_data.TransformData(verbose=True)
+        #Scale train
+        train_scaled = data_transform.ScaleImages(train, verbose = True)
+        
+        #Split train and scale accordingly
+        # #do the split here and pass in parameters
+        if(split):
+            X, Y = data_transform.SplitTrain(train_scaled)
+        elif X is None | Y is None:
+            raise RuntimeError(f"When Split is set to False, X and Y must be supplied." )
+        
+        if "Lenet5" in model_name:
+            #Get and compile the model. 
+            model, history = self.__get_model_lenet5(model_name, X = X, Y = Y, l_batch_size = 128, l_epochs = 300, l_shuffle = True)
+        elif "jcw" in model_name:
+            model, history = self.__get_model_jcw(model_name, X = X, Y = Y, l_batch_size = 128, l_epochs = 300, l_shuffle = True)
+        return model, history
+
     def train_lenet5(self, model_name, train, split=True, X=None, Y=None, verbose = True):
 
         data_transform = transform_data.TransformData(verbose=True)
