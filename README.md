@@ -78,7 +78,7 @@ Models
 
 
 
-### Navigating the Files in this Repository
+## Navigating the Files in this Repository
 
 Below is a list of files found in this repository along with a brief description.
 
