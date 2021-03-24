@@ -66,8 +66,7 @@ For this project the team performed the following tasks
 
 The models that were implemented as part of this challenge are:
 
-Models
-====================
+## Models
 
 ### LeNet5
 
