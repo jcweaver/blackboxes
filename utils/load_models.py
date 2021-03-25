@@ -207,6 +207,7 @@ class LoadTrainModels(object):
             #We already have a model file, so retrieve and return it. 
             model = self.__load_model_from_file(model_name, model_file_name, model_json_file, verbose = True)
             #TODO need to add history file here. 
+            history=""
         return model, history
     
     
@@ -305,7 +306,9 @@ class LoadTrainModels(object):
         else:
             #We already have a model file, so retrieve and return it. 
             model = self.__load_model_from_file(model_name, model_file_name, model_json_file, verbose = True)
+            
             #TODO need to add history file here. 
+            history=""
         return model, history
 
     ###### PUBLIC
@@ -340,7 +343,9 @@ class LoadTrainModels(object):
             model, history = self.__get_model_lenet5(model_name, X = X, Y = Y, l_batch_size = 128, l_epochs = 300, l_shuffle = True)
         elif "jcw" in model_name:
             model, history = self.__get_model_jcw(model_name, X = X, Y = Y, l_batch_size = 128, l_epochs = 300, l_shuffle = True)
-        return model, history
+        #Only return if one of the model_names
+        if ("Lenet5" in model_name) or ("jcw" in model_name):
+            return model, history
 
     def train_lenet5(self, model_name, train, split=True, X=None, Y=None, verbose = True):
 
