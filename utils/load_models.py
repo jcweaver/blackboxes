@@ -488,6 +488,6 @@ class LoadTrainModels(object):
         X_reshape = X.reshape(-1, 96, 96, 1)
 
         #Get and compile the model.
-        model, history = self.__get_model_jcw(model_name, X = X_reshape, Y = Y, l_batch_size = 128, l_epochs = 300, l_shuffle = True)
+        model, history = self.__get_model_sp(model_name, X = X_reshape, Y = Y, l_batch_size = 128, l_epochs = 300, l_shuffle = True)
 
         return model, history
