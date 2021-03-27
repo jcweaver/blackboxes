@@ -345,7 +345,7 @@ class LoadTrainModels(object):
 
         with tf.device(dev):
             model = Sequential()
-            model.add(Conv2D(32, (3,3, input_shape=(96,96,1))))
+            model.add(Conv2D(32, (3,3), input_shape=(96,96,1)))
             model.add(Activation('relu'))
             model.add(MaxPooling2d(pool_size=(2,2)))
 
