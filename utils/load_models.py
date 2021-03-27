@@ -396,8 +396,8 @@ class LoadTrainModels(object):
             #We already have a model file, so retrieve and return it.
             model = self.__load_model_from_file(model_name, model_file_name, model_json_file, verbose = True)
             #TODO need to add history file here.
-            
-    return model, history
+
+        return model, history
 
 
     ###### PUBLIC
