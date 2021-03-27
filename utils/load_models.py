@@ -325,7 +325,7 @@ class LoadTrainModels(object):
 
         #create a model and return it? or save it?
         #act = Adam(lr = 0.01, beta_1 = 0.9, beta_2 = 0.999, epsilon = 1e-8)
-        sgd = SGD(lr=learning_rate, momentum=momentum, nesterov=True)
+        sgd = SGD(lr=0.01, momentum=momentum, nesterov=True)
         lss = 'mean_squared_error'
         mtrc = ['mae','mse']
 
