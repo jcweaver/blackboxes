@@ -63,25 +63,18 @@ Though our final goal was to utilize neural networks for predicting the facial k
 
 **Datasets Used:**
 
-a. Raw dataset - No modifications, all missing values filled in with mean of respective column.
-
-b. Duplicates removed - All duplicates removed with missing values filled in with the mean of the respective column. 
-
-c. Augmented dataset - Utilized a custom-built linear model to predict the value of the missing data points. 
+a. Raw dataset - No modifications, all missing values filled in with mean of respective column.<br />
+b. Duplicates removed - All duplicates removed with missing values filled in with the mean of the respective column.<br />
+c. Augmented dataset - Utilized a custom-built linear model to predict the value of the missing data points.<br />
 
 **Models**
 
-a. Ordinary Least Squares Regression
-
-b. Ridge Regression
-
-c. Lasso Regression
-
-d. Decision Tree Regression
-
-e. K-Nearest Neighbors Regression (with K=5 and K=7 nearest neighbors)
-
-f. Random Forest Regression (with 5 estimators)
+a. Ordinary Least Squares Regression<br />
+b. Ridge Regression<br />
+c. Lasso Regression<br />
+d. Decision Tree Regression<br />
+e. K-Nearest Neighbors Regression (with K=5 and K=7 nearest neighbors)<br />
+f. Random Forest Regression (with 5 estimators)<br />
 
 In general, performance varied between models and datasets, with the linear, lasso and ridge regression models, and decision tree regression, giving very poor (negative $`R^2`$) performance. Best performance was achieved using K-Nearest Neighbors regression with 7 neighbors and using the raw dataset. This might be because the raw dataset, as opposed to the duplicate-removed dataset gives more training examples. Random forest regression performed slightly worse than the K-Nearest Neighbors models, but still better than the others, with optimal performance given using the augmented dataset. Another interesting finding from this initial modelling process is that angled faces, eyeglasses and childrens faces seemed to pose the biggest predictive challenge for these baseline models.
 
