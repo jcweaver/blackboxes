@@ -36,33 +36,54 @@ To reach the final output of the project and to support the summary findings abo
 
 For this project the team performed the following tasks 
 
-1. Getting ready for Project 4!
+1. **Getting ready for Project 4!**
 - Files used in Project 4 - go through the files that are used in Project 4.  
   * training.csv - Train file
   * test.csv - TBD
   * IdlookupTable.csv - TBD
   * SampleSubmission - TBD
-2. EDA
+2. **EDA**
 * TBD
 * TBD
 * TBD
 * TBD
 * TBD
 
-3. Clean Data
+3. **Clean Data**
 * TBD
 * TBD
 * TBD
 * TBD
 * TBD
-4. Training Pipeline
+4. **Training Pipeline**
+
+4.1 **Baseline Modelling**
+
+Though our final goal was to utilize neural networks for predicting the facial keypoints, we decided to first use some simpler machine learning models to develop a baseline, help us develop our final data pipeline and fine tune our EDA and data cleaning processes. As this is a regression problem, we selected several models from the SciKitLearn library. In general. none of these models performed particularly well based upon the mean squared error and $`R^2`$. Moreover, they were particularly slow to run. 
+
+**Datasets Used:**
+
+a. Raw dataset - No modifications, all missing values filled in with mean of respective column.
+b. Duplicates removed - All duplicates removed with missing values filled in with the mean of the respective column. 
+c. Augmented dataset - Utilized a custom-built linear model to predict the value of the missing data points. 
+
+**Models**
+
+a. Ordinary Least Squares Regression
+b. Ridge Regression
+c. Lasso Regression
+d. Decision Tree Regression
+e. K-Nearest Neighbors Regression (with K=5 and K=7 nearest neighbors)
+f. Random Forest Regression (with 5 estimators)
+
+In general, performance varied between models and datasets, with the linear, lasso and ridge regression models, and decision tree regression, giving very poor (negative $`R^2`$) performance. Best performance was achieved using K-Nearest Neighbors regression with 7 neighbors and using the raw dataset. This might be because the raw dataset, as opposed to the duplicate-removed dataset gives more training examples. Random forest regression performed slightly worse than the K-Nearest Neighbors models, but still better than the others, with optimal performance given using the augmented dataset. Another interesting finding from this initial modelling process is that angled faces, eyeglasses and childrens faces seemed to pose the biggest predictive challenge for these baseline models.
+
 * TBD
 * TBD
 * TBD
 * TBD
-* TBD
-5. Inference Pipeline
-6. Stacking??
+6. Inference Pipeline
+7. Stacking??
 
 The models that were implemented as part of this challenge are:
 
