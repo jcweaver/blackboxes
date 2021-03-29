@@ -13,7 +13,7 @@ class TransformData(object):
     ##### PRIVATE
     #Let's make this easy for everyone to use since we all have different paths for our files
     #pickles_path - file where all the yummy pickle files are
-    def __init__(self, scale = 255.0, reshape = 96, verbose = False):
+    def __init__(self, scale = 255.0, reshape = 96, verbose = False, prop = 0.1):
         
         # validate that the constructor parameters were provided by caller
         #I don't think we need the pickle path in here...but keep this code because 
@@ -31,12 +31,15 @@ class TransformData(object):
 
         #self.__pickle_file_path = pickle_file_path #Do we need this? not sure but for now let's keep it. 
         self.__scale_image_by = scale
-        self.__reshape_image = reshape 
+        self.__reshape_image = reshape
+        
+        #Prop is a proportion that can be used for shifting images
+        self.prop = prop
 
 
     #Rakesh to add rotate, etc. 
 
-    def __get_coordinate_columns(df, x = True, y = True):
+    def __get_coordinate_columns(self,df, x = True, y = True):
 
         if x & y:
             coordinates = [c for c in df.columns if c.endswith('_x') | c.endswith('_y')]
@@ -47,7 +50,7 @@ class TransformData(object):
         return coordinates
 
     #it might be easier to work wtih a dictionary as these are pairs??
-    def __get_coordinate_dict():
+    def __get_coordinate_dict(self):
         coord = {
                 'left_eye_center_x': 'left_eye_center_y',  
                 'right_eye_center_x': 'right_eye_center_y', 
@@ -68,7 +71,7 @@ class TransformData(object):
         return coord
 
     #it might be easier to work wtih a dictionary as these are pairs??
-    def __get_coordinate_dict_flipped():
+    def __get_coordinate_dict_flipped(self):
         coord = {
             'left_eye_inner_corner_x':'right_eye_inner_corner_x',
             'left_eye_center_x':'right_eye_center_x',
@@ -102,18 +105,19 @@ class TransformData(object):
        
     #NOT TESTED
     def FlipHorizontal(self, train, verbose = False):
-        #Flip the iages horizontaly and adjust the labels. 
+        #Flip the images horizontaly and adjust the labels. 
         
         adj_train = train.copy()
         
         
         #this will only do all the keypoints. Not sure about this..
+        #removes null rows
         adj_train = adj_train[(adj_train.isnull().sum(axis = 1) == 0)]
 
         # horizontally flip the images
-        adj_train.image = adj_train.image.map(lambda x: np.flip(x.reshape(self.__scale_image_by,self.__scale_image_by), axis=1).ravel())
+        adj_train.image = adj_train.image.map(lambda x: np.flip(x.reshape(self.__reshape_image,self.__reshape_image), axis=1).ravel())
 
-        cols = __get_coordinate_columns(adj_train, True, False)
+        cols = self.__get_coordinate_columns(adj_train, True, False)
         
         # shift all 'x' values by linear mirroring
         for c in cols:
@@ -126,7 +130,7 @@ class TransformData(object):
         if verbose:
             print(cols)
 
-        adj_train.rename(columns=__get_coordinate_dict_flipped(), inplace=True)
+        adj_train.rename(columns=self.__get_coordinate_dict_flipped(), inplace=True)
         
         # change the column order back to original
         adj_train = adj_train[cols]
@@ -136,6 +140,12 @@ class TransformData(object):
         return adj_train
 
 
+    def ShiftImages(self, df, verbose= False):
+        '''Use for creating additional images that are shifted versions of the original set
+        '''
+        
+    
+    
     def ScaleImages(self, df, verbose = False):
         #For most CNN we will need to scale the images by 255. 
 
