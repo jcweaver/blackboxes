@@ -211,7 +211,12 @@ class LoadTrainModels(object):
 
 
 
-    def __get_model_jcw(self,model_name, X, Y, l_batch_size, l_epochs, l_validation_split = .2, x_val = None, y_val = None, l_shuffle = True, verbose = True):
+    def __get_model_jcw(self,model_name, X, Y, l_batch_size, l_epochs, l_validation_split = .2, x_val = None, y_val = None, l_shuffle = True, verbose = True, separate = False):
+        #Number of features/outputs
+        num_features= 30
+        if separate:
+            num_features = 8
+            
 
         model_file_name = "".join([self.__model_dir, model_name,".h5"])
         model_json_file = "".join([self.__model_dir, model_name,".json"])
@@ -270,7 +275,7 @@ class LoadTrainModels(object):
                 model.add(Activation('relu'))
                 model.add(Dense(512))
                 model.add(Activation('relu'))
-                model.add(Dense(30))
+                model.add(Dense(num_features))
 
 
             if verbose:
@@ -454,11 +459,19 @@ class LoadTrainModels(object):
 
         return model, history
 
-    def train_jcw(self, model_name, train, split=True, X=None, Y=None, verbose = True):
+    def train_jcw(self, model_name, train, split=True, X=None, Y=None, verbose = True, separate = False):
+        if separate :
+            #Only use some of the train
+            train_cols = ['left_eye_center_x', 'left_eye_center_y', 'right_eye_center_x', 'right_eye_center_y',
+                          'nose_tip_x', 'nose_tip_y', 'mouth_center_bottom_lip_x', 'mouth_center_bottom_lip_y',
+                          'image']
+            train = train[train_cols].copy()
 
+        
         data_transform = transform_data.TransformData(verbose=True)
         #Scale train
         train_scaled = data_transform.ScaleImages(train, verbose = True)
+        print(train_scaled.columns)
 
         #Split train and scale accordingly
         # #do the split here and pass in parameters
@@ -468,7 +481,7 @@ class LoadTrainModels(object):
             raise RuntimeError(f"When Split is set to False, X and Y must be supplied." )
 
         #Get and compile the model.
-        model, history = self.__get_model_jcw(model_name, X = X, Y = Y, l_batch_size = 128, l_epochs = 300, l_shuffle = True)
+        model, history = self.__get_model_jcw(model_name, X = X, Y = Y, l_batch_size = 128, l_epochs = 300, l_shuffle = True, separate = True)
 
         return model, history
 

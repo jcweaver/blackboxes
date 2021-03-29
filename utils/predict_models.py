@@ -185,7 +185,8 @@ class PredictModels(object):
             print("Predictions complete!")
 
         #Generate Predictions
-        self.__generate_prediction(model_name, Y, test, columns="Full")
+        #columns = False if not using the full columns
+        self.__generate_prediction(model_name, Y, test, columns = False)
         return Y
 
     def predict_sp(self, model_name, model_file, model_json, test, scale = True, X=None, verbose = False):
