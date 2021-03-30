@@ -118,8 +118,8 @@ class TransformData(object):
 
         #https://www.techbeamers.com/python-map-function/ with lambda 
         # horizontally flip the images - use the map function
-        adj_train.image = adj_train.image.map(lambda x: np.flip(x.reshape(self.__scale_image_by,self.__scale_image_by), axis=1).ravel())
-
+        adj_train.image = adj_train.image.map(lambda x: np.flip(x.reshape(self.__reshape_image,self.__reshape_image), axis=1).ravel() )
+        
         cols = self.__get_coordinate_columns(adj_train, True, False)
         
         # shift all 'x' values by linear mirroring
@@ -134,7 +134,7 @@ class TransformData(object):
             print(cols)
 
         #ug this only works if we also rename the columns...
-        adj_train.rename(columns=__get_coordinate_dict_flipped(), inplace=True)
+        adj_train.rename(columns=self.__get_coordinate_dict_flipped(), inplace=True)
         #need to verify this...
         # change the column order back to original
         adj_train = adj_train[cols]
@@ -165,13 +165,13 @@ class TransformData(object):
             print(f"Number of images to be brightened: {bright_train.shape[0]}")
         #https://www.techbeamers.com/python-map-function/ with lambda 
         #Apply a level of brightness with min =0 and max = 1 for every image in bright_train
-        brighten.image = bright_train.image.map(lambda x: np.clip(x * level_of_brightness, 0.0, 1.0))
+        bright_train.image = bright_train.image.map(lambda x: np.clip(x * level_of_brightness, 0.0, 1.0))
         
         if verbose: 
             print(f"Number of images to be dimmed: {dim_train.shape[0]}")
         #https://www.techbeamers.com/python-map-function/ with lambda 
         #Apply a level of dim with min =0 and max = 1 for every image in dim_train    
-        dim.image = dim_train.image.map(lambda x: np.clip(x * level_to_dim, 0.0, 1.0))
+        dim_train.image = dim_train.image.map(lambda x: np.clip(x * level_to_dim, 0.0, 1.0))
 
         #Append dimmed images to brightened images. 
         aug_train = bright_train.append(dim_train, ignore_index = True).reset_index().drop(columns=['index'])
