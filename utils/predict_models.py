@@ -4,14 +4,14 @@
 
 import pandas as pd
 import numpy as np
-from utils import transform_data
+#from utils import transform_data
+import transform_data
 import argparse
 import pickle
 import os
 from keras.models import Model, model_from_json
 from keras import backend as K
 import tensorflow as tf
-import matplotlib.pyplot as plt
 
 
 class PredictModels(object):
