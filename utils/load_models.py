@@ -419,12 +419,17 @@ class LoadTrainModels(object):
     #######################################
     # Train Models
     #######################################
-    def train_model(self, model_name, train, split=True, X=None, Y=None, verbose = True):
+    def train_model(self, model_name, train, split=True, X=None, Y=None,bright_and_dim = False,hoizontal_flip = False, verbose = True):
 
         data_transform = transform_data.TransformData(verbose=True)
         #Scale train
         train_scaled = data_transform.ScaleImages(train, verbose = True)
 
+        if bright_and_dim:
+            train_scaled = data_transform.Bright_Dim(train_scaled)
+        
+        if hoizontal_flip:
+            train_scaled = data_transform.FlipHorizontal(train_scaled)
         #Split train and scale accordingly
         # #do the split here and pass in parameters
         if(split):
@@ -439,14 +444,19 @@ class LoadTrainModels(object):
             model, history = self.__get_model_jcw(model_name, X = X, Y = Y, l_batch_size = 128, l_epochs = 300, l_shuffle = True)
         elif "sp" in model_name:
             model, history = self.__get_model_sp(model_name, X = X, Y = Y, l_batch_size = 128, l_epochs = 300, l_shuffle = True)
+        else:
+            raise RuntimeError(f"Incorrect model name. Please verify and try again." )
         return model, history
 
-    def train_lenet5(self, model_name, train, split=True, X=None, Y=None, verbose = True):
+    ##### NO LONGER NEEDED. CAN USE GENERIC MODEL
+    def train_lenet5(self, model_name, train, split=True, X=None, Y=None, bright_and_dim = False, verbose = True):
 
         data_transform = transform_data.TransformData(verbose=True)
         #Scale train
         train_scaled = data_transform.ScaleImages(train, verbose = True)
 
+        if bright_and_dim:
+            train_scaled = data_transform.Bright_Dim(train_scaled)
         #Split train and scale accordingly
         # #do the split here and pass in parameters
         if(split):

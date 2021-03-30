@@ -36,7 +36,7 @@ class TransformData(object):
 
     #Rakesh to add rotate, etc. 
 
-    def __get_coordinate_columns(df, x = True, y = True):
+    def __get_coordinate_columns(self, df, x = True, y = True):
 
         if x & y:
             coordinates = [c for c in df.columns if c.endswith('_x') | c.endswith('_y')]
@@ -47,7 +47,7 @@ class TransformData(object):
         return coordinates
 
     #it might be easier to work wtih a dictionary as these are pairs??
-    def __get_coordinate_dict():
+    def __get_coordinate_dict(self):
         coord = {
                 'left_eye_center_x': 'left_eye_center_y',  
                 'right_eye_center_x': 'right_eye_center_y', 
@@ -68,7 +68,7 @@ class TransformData(object):
         return coord
 
     #it might be easier to work wtih a dictionary as these are pairs??
-    def __get_coordinate_dict_flipped():
+    def __get_coordinate_dict_flipped(self):
         coord = {
             'left_eye_inner_corner_x':'right_eye_inner_corner_x',
             'left_eye_center_x':'right_eye_center_x',
@@ -99,7 +99,9 @@ class TransformData(object):
 
     
     ##### PUBLIC
-       
+    ###########################################
+    ##  Flip Horizonal
+    ###########################################   
     #NOT TESTED
     def FlipHorizontal(self, train, verbose = False):
         #Flip the iages horizontaly and adjust the labels. 
@@ -110,7 +112,8 @@ class TransformData(object):
         #this will only do all the keypoints. Not sure about this..
         adj_train = adj_train[(adj_train.isnull().sum(axis = 1) == 0)]
 
-        # horizontally flip the images
+        #https://www.techbeamers.com/python-map-function/ with lambda 
+        # horizontally flip the images - use the map function
         adj_train.image = adj_train.image.map(lambda x: np.flip(x.reshape(self.__scale_image_by,self.__scale_image_by), axis=1).ravel())
 
         cols = __get_coordinate_columns(adj_train, True, False)
@@ -121,21 +124,61 @@ class TransformData(object):
             mod = np.clip(np.float(0 - 95) - mod, np.float(0), np.float(95))
             adj_train[c] = mod
 
-        
+        #Get the columns so we can reorder later
         cols = adj_train.columns
         if verbose:
             print(cols)
 
+        #ug this only works if we also rename the columns...
         adj_train.rename(columns=__get_coordinate_dict_flipped(), inplace=True)
-        
+        #need to verify this...
         # change the column order back to original
         adj_train = adj_train[cols]
 
         if verbose: 
-            print(f"Horizontal df with size of {adj_train.shape}")
+            print(f"New Horizontal shape: {adj_train.shape}")
         return adj_train
 
 
+    ###########################################
+    ##  Bright and Dim
+    ###########################################
+    #https://scipy-lectures.org/advanced/image_processing/
+    #https://www.tutorialspoint.com/scipy/scipy_ndimage.htm
+
+    def Bright_Dim(self, train, level_of_brightness = 1.2, level_to_dim = 0.6, verbose = False):
+        
+        #Used to brighten
+        bright_train = train.copy()
+
+        # Get the items with all 15 points
+        bright_train = bright_train[(bright_train.isnull().sum(axis = 1) == 0)]
+
+        # Used for dimming
+        dim_train = bright_train.copy()
+
+        if verbose: 
+            print(f"Number of images to be brightened: {bright_train.shape[0]}")
+        #https://www.techbeamers.com/python-map-function/ with lambda 
+        #Apply a level of brightness with min =0 and max = 1 for every image in bright_train
+        brighten.image = bright_train.image.map(lambda x: np.clip(x * level_of_brightness, 0.0, 1.0))
+        
+        if verbose: 
+            print(f"Number of images to be dimmed: {dim_train.shape[0]}")
+        #https://www.techbeamers.com/python-map-function/ with lambda 
+        #Apply a level of dim with min =0 and max = 1 for every image in dim_train    
+        dim.image = dim_train.image.map(lambda x: np.clip(x * level_to_dim, 0.0, 1.0))
+
+        #Append dimmed images to brightened images. 
+        aug_train = bright_train.append(dim_train, ignore_index = True).reset_index().drop(columns=['index'])
+
+        if verbose: 
+            print(f"Completed brighten and dim. Number of observations added to train: {aug_train.shape[0]}")
+        return aug_train
+
+    ###########################################
+    ##  Scale Images
+    ###########################################
     def ScaleImages(self, df, verbose = False):
         #For most CNN we will need to scale the images by 255. 
 
@@ -158,7 +201,9 @@ class TransformData(object):
         return df
 
 
-
+    ###########################################
+    ##  Split Train
+    ###########################################
     def SplitTrain(self, train, normalize = True, verbose = True):
         #Split the train data into X,Y and in the proper shape
         #Everyone should be able to use this
@@ -194,7 +239,9 @@ class TransformData(object):
                 Y[:,i] = new_arr
         return X, Y
         
-
+    ###########################################
+    ##  Split Test
+    ###########################################
     def SplitTest(self, test, ids, verbose = False):
         
         if verbose:
