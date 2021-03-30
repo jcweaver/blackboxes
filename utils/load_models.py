@@ -439,17 +439,13 @@ class LoadTrainModels(object):
         #Scale train
         train_scaled = data_transform.ScaleImages(train, verbose = True)
 
+        #Flip the image if True
         if hoizontal_flip:
             train_scaled = data_transform.FlipHorizontal(train_scaled, verbose = True)
-        
+        #Bright and Dim the image if True
         if bright_and_dim:
             train_scaled = data_transform.Bright_Dim(train_scaled,verbose = True)
-        
-
-        
-
-
-        
+           
         
         #Split train and scale accordingly
         # #do the split here and pass in parameters
