@@ -115,7 +115,7 @@ class PredictModels(object):
     #######################################
     # Predict Models
     #######################################
-    def predict_lenet5(self, model_name,model_file, model_json, test, scale = True, X=None, verbose = False):
+    def predict_lenet5(self, model_name,model_file, model_json, test, scale = True, X=None, verbose = False, columns = "Full"):
 
         model_file_name = "".join([self.__model_dir, model_file])
         model_json_file = "".join([self.__model_dir, model_json])
@@ -148,11 +148,11 @@ class PredictModels(object):
             print("Predictions complete!")
 
         #Generate Predictions
-        self.__generate_prediction(model_name, Y, test, columns="Full")
+        self.__generate_prediction(model_name, Y, test, columns=columns)
         return Y
 
 
-    def predict_jcw(self, model_name,model_file, model_json, test, scale = True, X=None, verbose = False):
+    def predict_jcw(self, model_name,model_file, model_json, test, scale = True, X=None, verbose = False, columns = "Full"):
 
         model_file_name = "".join([self.__model_dir, model_file])
         model_json_file = "".join([self.__model_dir, model_json])
@@ -186,10 +186,10 @@ class PredictModels(object):
 
         #Generate Predictions
         #columns = False if not using the full columns
-        self.__generate_prediction(model_name, Y, test, columns = False)
+        self.__generate_prediction(model_name, Y, test, columns = columns)
         return Y
 
-    def predict_sp(self, model_name, model_file, model_json, test, scale = True, X=None, verbose = False):
+    def predict_sp(self, model_name, model_file, model_json, test, scale = True, X=None, verbose = False, columns = "Full"):
 
         model_file_name = "".join([self.__model_dir, model_file])
         model_json_file = "".join([self.__model_dir, model_json])
@@ -224,5 +224,5 @@ class PredictModels(object):
             print("Predictions complete!")
 
         #Generate Predictions
-        self.__generate_prediction(model_name, Y, test, columns="Full")
+        self.__generate_prediction(model_name, Y, test, columns=columns)
         return Y
