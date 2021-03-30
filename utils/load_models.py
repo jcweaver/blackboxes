@@ -4,7 +4,6 @@
 
 import pandas as pd
 import numpy as np
-from utils import transform_data
 import argparse
 import pickle
 import os
@@ -17,6 +16,9 @@ from keras.regularizers import l2
 from keras import backend as K
 import tensorflow as tf
 import matplotlib.pyplot as plt
+import sys
+import transform_data
+
 
 
 np.random.seed(42)
@@ -431,14 +433,24 @@ class LoadTrainModels(object):
     def train_model(self, model_name, train, split=True, X=None, Y=None,bright_and_dim = False,hoizontal_flip = False, verbose = True):
 
         data_transform = transform_data.TransformData(verbose=True)
+
+        #train_copy = train.copy()
+
         #Scale train
         train_scaled = data_transform.ScaleImages(train, verbose = True)
 
-        if bright_and_dim:
-            train_scaled = data_transform.Bright_Dim(train_scaled)
-        
         if hoizontal_flip:
-            train_scaled = data_transform.FlipHorizontal(train_scaled)
+            train_scaled = data_transform.FlipHorizontal(train_scaled, verbose = True)
+        
+        if bright_and_dim:
+            train_scaled = data_transform.Bright_Dim(train_scaled,verbose = True)
+        
+
+        
+
+
+        
+        
         #Split train and scale accordingly
         # #do the split here and pass in parameters
         if(split):
