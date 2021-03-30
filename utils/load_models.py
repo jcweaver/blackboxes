@@ -454,7 +454,7 @@ class LoadTrainModels(object):
         elif "sp" in model_name:
             model, history = self.__get_model_sp(model_name, X = X, Y = Y, l_batch_size = 128, l_epochs = 300, l_shuffle = True)
         else:
-            raise RuntimeError(f"Incorrect model name. Please verify and try again." )
+            raise RuntimeError("Incorrect model name. Please verify and try again." )
         return model, history
 
     ##### NO LONGER NEEDED. CAN USE GENERIC MODEL
@@ -474,7 +474,7 @@ class LoadTrainModels(object):
             raise RuntimeError(f"When Split is set to False, X and Y must be supplied." )
 
         #Get and compile the model.
-        model, history = self.__get_model_lenet5(model_name, X = X, Y = Y, l_batch_size = 128, l_epochs = 300, l_shuffle = True, separate = separate)
+        model, history = self.__get_model_lenet5(model_name, X = X, Y = Y, l_batch_size = 128, l_epochs = 300, l_shuffle = True, separate = False)
 
         return model, history
 
