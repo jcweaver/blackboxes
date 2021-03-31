@@ -176,8 +176,6 @@ class LoadTrainModels(object):
             if verbose:
                 print("JN model file not found. Model creation begnining")
 
-                GPU_count = len(tf.config.list_physical_devices('GPU'))
-
             #Try different values but use Adam
             #act = Adam(lr = 0.01, beta_1 = 0.9, beta_2 = 0.1, epsilon = 1e-8)
             act = Adam(lr = 0.001, beta_1 = 0.9, beta_2 = 0.999, epsilon = 1e-8)
@@ -261,14 +259,11 @@ class LoadTrainModels(object):
 
 
     def __get_model_jcw(self,model_name, X, Y, l_batch_size, l_epochs, l_validation_split = .2, x_val = None, y_val = None, l_shuffle = True, verbose = True, separate = False):
-        #Number of features/outputs
-        num_features= 30
-        if separate:
-            num_features = 8
-            
+                    
 
         model_file_name = "".join([self.__model_dir, model_name,".h5"])
         model_json_file = "".join([self.__model_dir, model_name,".json"])
+        model_plot_name = "".join([self.__model_dir, model_name,"_plot.png"])
 
         if verbose:
             print("Looking for model JW")
@@ -278,7 +273,7 @@ class LoadTrainModels(object):
             if verbose:
                 print("JW model file not found. Model creation beginning")
 
-                GPU_count = len(tf.config.list_physical_devices('GPU'))
+            GPU_count = len(tf.config.list_physical_devices('GPU'))
 
             #create a model and return it? or save it?
             act = Adam(lr = 0.001, beta_1 = 0.9, beta_2 = 0.999, epsilon = 1e-8)
@@ -324,7 +319,7 @@ class LoadTrainModels(object):
                 model.add(Activation('relu'))
                 model.add(Dense(512))
                 model.add(Activation('relu'))
-                model.add(Dense(num_features))
+                model.add(Dense(30))
 
 
             if verbose:
@@ -336,14 +331,19 @@ class LoadTrainModels(object):
             #https://keras.io/api/models/model_training_apis/
             compiled_model.compile(optimizer = act, loss = lss, metrics = mtrc)
 
-            if verbose: print("Done compiling")
+            if verbose: 
+                print("Compiling complete")
 
             #https://keras.io/api/models/model_training_apis/
             #Validation data will override validation split so okay to include both
             #This return a history object:
 
             history = compiled_model.fit(X, Y, validation_split = l_validation_split, batch_size = l_batch_size * GPU_count, epochs = l_epochs, shuffle = l_shuffle, callbacks = [es, cp], verbose = verbose)
-            if verbose: print("Done fitting")
+            
+            if verbose: 
+                print("Fitting complete")
+                
+            #self.__save_history_info(history, model_name, model_plot_name, verbose = False)
 
 
             #Save the model and we can version these ... might want to make it so I can modify the names for different versions and configs??
@@ -358,18 +358,18 @@ class LoadTrainModels(object):
                 print(f"{model_name} model created and file saved for future use.")
         else:
             #We already have a model file, so retrieve and return it.
+            history_file = "".join([self.__model_dir, model_name,"_hist.csv"])
+            history = pd.read_csv(history_file)
             model = self.__load_model_from_file(model_name, model_file_name, model_json_file, verbose = True)
-            #TODO need to add history file here.
+            
         return model, history
 
     def __get_model_sp(self,model_name, X, Y, l_batch_size, l_epochs, l_validation_split = .2, x_val = None, y_val = None, l_shuffle = True, verbose = True, separate = False):
         #Number of features/outputs
-        num_features= 30
-        if separate:
-            num_features = 8
         
         model_file_name = "".join([self.__model_dir, model_name,".h5"])
         model_json_file = "".join([self.__model_dir, model_name,".json"])
+        model_plot_name = "".join([self.__model_dir, model_name,"_plot.png"])
 
         if verbose:
             print("Looking for model SP")
@@ -426,7 +426,7 @@ class LoadTrainModels(object):
             model.add(Dense(500))
             model.add(Activation('relu'))
 
-            model.add(Dense(num_features))
+            model.add(Dense(30))
 
         if verbose:
             print(model.summary())
@@ -435,10 +435,14 @@ class LoadTrainModels(object):
 
         compiled_model.compile(optimizer = sgd, loss = lss, metrics = mtrc)
 
-        if verbose: print("Done compiling")
+        if verbose: 
+            print("Compiling complete")
 
         history = compiled_model.fit(X_reshape, Y, validation_split = l_validation_split, batch_size = l_batch_size * GPU_count, epochs = l_epochs, shuffle = l_shuffle, callbacks = [es, cp], verbose = verbose)
-        if verbose: print("Done fitting")
+        if verbose: 
+            print("Fitting complete")
+
+        self.__save_history_info(history, model_name, model_plot_name, verbose = False)
 
         #Save the model and we can version these ... might want to make it so I can modify the names for different versions and configs??
         model_json = compiled_model.to_json()
@@ -452,8 +456,10 @@ class LoadTrainModels(object):
             print(f"{model_name} model created and file saved for future use.")
         else:
             #We already have a model file, so retrieve and return it.
+            history_file = "".join([self.__model_dir, model_name,"_hist.csv"])
+            history = pd.read_csv(history_file)
             model = self.__load_model_from_file(model_name, model_file_name, model_json_file, verbose = True)
-            #TODO need to add history file here.
+            
 
         return model, history
 
