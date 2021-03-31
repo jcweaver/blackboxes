@@ -70,8 +70,9 @@ class TransformData(object):
     ##### PUBLIC
     ###########################################
     #  Flip Horizonal
+    #  Used to flip images horizontaly 
     #  Inspired from
-    # https://www.kaggle.com/balraj98/data-augmentation-for-facial-keypoint-detection
+    #  https://www.kaggle.com/balraj98/data-augmentation-for-facial-keypoint-detection
     #
     ###########################################   
     def FlipHorizontal(self, train, verbose = False):
@@ -113,6 +114,7 @@ class TransformData(object):
     #
     ###########################################
     #  Bright and Dim
+    #  Used to brighten or dim an image
     #  Inspired from
     #  https://www.kaggle.com/balraj98/data-augmentation-for-facial-keypoint-detection
     #
@@ -153,7 +155,7 @@ class TransformData(object):
 
 
     ###########################################
-    #  Scale Images
+    #  Scale Images - scale images by 255
     #  Inspired by
     #  https://www.kaggle.com/balraj98/data-augmentation-for-facial-keypoint-detection#Exploring-Data
     ###########################################
@@ -176,8 +178,8 @@ class TransformData(object):
 
     ###########################################
     #  Split Train
-    #
-    #
+    # Split the train data into X and Y and in
+    # the proper shape
     ###########################################
     def SplitTrain(self, train, verbose = True):
         #Split the train data into X,Y and in the proper shape
@@ -212,8 +214,8 @@ class TransformData(object):
         
     ###########################################
     #  Split Test
-    #
-    #
+    # Split the Test data into X and subset and in
+    # the proper shape
     ###########################################
     def SplitTest(self, test, ids, verbose = False):
         
