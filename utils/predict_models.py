@@ -40,6 +40,7 @@ class PredictModels(object):
 
     #######################################
     # Load Models
+    # Load the model from a specfied json file
     #######################################
     def __load_model_from_file(self,model_name, model_file, model_json, verbose = False):
 
@@ -61,12 +62,16 @@ class PredictModels(object):
 
     #######################################
     # Generate Predictions
+    # Genereate some prediction files that
+    # we can submit to Kaggle
     #######################################
     def __generate_prediction(self, model_name, Y, test, columns="Full", verbose = True):
 
         id_lookup = self.__ids
 
+        
         if columns == "Full":
+            #All 30 points
             train_cols = ['left_eye_center_x', 'left_eye_center_y', 'right_eye_center_x', 'right_eye_center_y', 'left_eye_inner_corner_x',
             'left_eye_inner_corner_y', 'left_eye_outer_corner_x', 'left_eye_outer_corner_y', 'right_eye_inner_corner_x',
             'right_eye_inner_corner_y', 'right_eye_outer_corner_x','right_eye_outer_corner_y', 'left_eyebrow_inner_end_x',
@@ -75,6 +80,7 @@ class PredictModels(object):
             'mouth_left_corner_x', 'mouth_left_corner_y', 'mouth_right_corner_x', 'mouth_right_corner_y', 'mouth_center_top_lip_x',
             'mouth_center_top_lip_y', 'mouth_center_bottom_lip_x', 'mouth_center_bottom_lip_y', 'image']
         else:
+            #8 points only
             train_cols = ['left_eye_center_x', 'left_eye_center_y', 'right_eye_center_x', 'right_eye_center_y', 'nose_tip_x', 'nose_tip_y',
             'mouth_center_bottom_lip_x', 'mouth_center_bottom_lip_y', 'image']
 
@@ -115,13 +121,15 @@ class PredictModels(object):
     #######################################
     # Predict Models
     #######################################
-    def predict_lenet5(self, model_name,model_file, model_json, test, scale = True, X=None, verbose = False, columns = "Full"):
+    def predict_standard(self, model_name,model_file, model_json, test, scale = True, X=None, verbose = False, columns = "Full"):
 
         model_file_name = "".join([self.__model_dir, model_file])
         model_json_file = "".join([self.__model_dir, model_json])
 
         clean_test = test.drop(['index', 'check_sum'], axis=1, errors='ignore')
         data_transform = transform_data.TransformData(verbose=True)
+
+        #We scaled train we need to scale test
         if scale:
             test_scaled = data_transform.ScaleImages(test, True)
             X, test_subset = data_transform.SplitTest(test_scaled,self.__ids, verbose = True)
@@ -129,19 +137,20 @@ class PredictModels(object):
         # Create or load the model
         if (not os.path.isfile(model_file_name)) or (not os.path.isfile(model_json_file)):
             if verbose:
-                print("LeNet5 model file not found. ")
-            raise RuntimeError("One or some of the following files are missing; prediction cancelled:\n\n'%s'\n'%s'\n" %(model_file_name, model_json_file))
+                print("Model file not found:", model_name)
+            raise RuntimeError("Prediction cancelled. Files not found")
 
         if verbose:
             print("Loading model:", model_file_name)
 
-        # predict
+        
         model = self.__load_model_from_file(model_name, model_file_name, model_json_file, verbose = False)
         if verbose:
             print("Predicting %d (x,y) coordinates" % (len(X)))
 
         if verbose:
             print("Predicting model:", model_file_name)
+        # predict
         Y = model.predict(X, verbose = verbose)
 
         if verbose:
@@ -151,43 +160,6 @@ class PredictModels(object):
         self.__generate_prediction(model_name, Y, test, columns=columns)
         return Y
 
-
-    def predict_jcw(self, model_name,model_file, model_json, test, scale = True, X=None, verbose = False, columns = "Full"):
-
-        model_file_name = "".join([self.__model_dir, model_file])
-        model_json_file = "".join([self.__model_dir, model_json])
-
-        clean_test = test.drop(['index', 'check_sum'], axis=1, errors='ignore')
-        data_transform = transform_data.TransformData(verbose=True)
-        if scale:
-            test_scaled = data_transform.ScaleImages(test, True)
-            X, test_subset = data_transform.SplitTest(test_scaled,self.__ids, verbose = True)
-
-        # Create or load the model
-        if (not os.path.isfile(model_file_name)) or (not os.path.isfile(model_json_file)):
-            if verbose:
-                print("JCW model file not found. ")
-            raise RuntimeError("One or some of the following files are missing; prediction cancelled:\n\n'%s'\n'%s'\n" %(model_file_name, model_json_file))
-
-        if verbose:
-            print("Loading model:", model_file_name)
-
-        # predict
-        model = self.__load_model_from_file(model_name, model_file_name, model_json_file, verbose = False)
-        if verbose:
-            print("Predicting %d (x,y) coordinates" % (len(X)))
-
-        if verbose:
-            print("Predicting model:", model_file_name)
-        Y = model.predict(X, verbose = verbose)
-
-        if verbose:
-            print("Predictions complete!")
-
-        #Generate Predictions
-        #columns = False if not using the full columns
-        self.__generate_prediction(model_name, Y, test, columns = columns)
-        return Y
 
     def predict_sp(self, model_name, model_file, model_json, test, scale = True, X=None, verbose = False, columns = "Full"):
 
@@ -206,7 +178,7 @@ class PredictModels(object):
         if (not os.path.isfile(model_file_name)) or (not os.path.isfile(model_json_file)):
             if verbose:
                 print("SP model file not found. ")
-            raise RuntimeError("One or some of the following files are missing; prediction cancelled:\n\n'%s'\n'%s'\n" %(model_file_name, model_json_file))
+            raise RuntimeError("Prediction cancelled. Files not found")
 
         if verbose:
             print("Loading model:", model_file_name)
