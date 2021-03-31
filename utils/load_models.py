@@ -73,7 +73,7 @@ class LoadTrainModels(object):
 
     #######################################
     # Load Models
-    #
+    # Load a model from a specified json file
     #
     #
     #######################################
@@ -99,7 +99,7 @@ class LoadTrainModels(object):
     #######################################
     # Save Model History Information
     #
-    #
+    # Save a models history parameters, history and plot. 
     #
     #######################################
     def __save_history_info(self, history, model_name, plot_name, metric = "mse", verbose = False):
@@ -158,7 +158,7 @@ class LoadTrainModels(object):
     #######################################
     # Get Models
     #
-    # To do add comments
+    # get_model_jn - Model written by Jackie based on Lenet5
     #
     #######################################
     def __get_model_jn(self,model_name, X, Y, l_batch_size, l_epochs, l_validation_split = .01, l_shuffle = True, layers = 7, verbose = True):
@@ -189,12 +189,9 @@ class LoadTrainModels(object):
             cp = ModelCheckpoint(filepath = model_file_name, verbose = verbose, save_best_only = True,
                 mode = 'min', monitor = 'val_mae')
 
-            
-
             model = Sequential()
 
             #Add layers
-            
             model.add(Convolution2D(filters = 6, kernel_size = (3, 3), input_shape = (96, 96, 1)))
             model.add(ReLU())
             model.add(AveragePooling2D())
@@ -237,7 +234,8 @@ class LoadTrainModels(object):
             
             if verbose: 
                 print("Fitting complete")
-                
+
+            #Save all of this history information so we can inlude in our final report   
             self.__save_history_info(history, model_name, model_plot_name, verbose = False)
             
             #Save the model and we can version these ... might want to make it so I can modify the names for different versions and configs??
