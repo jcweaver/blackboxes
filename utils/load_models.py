@@ -99,15 +99,15 @@ class LoadTrainModels(object):
     #######################################
     # Save Model History Information
     #
-    # Save a models history parameters, history and plot. 
+    # Save a models history parameters, history and plot.
     #
     #######################################
     def __save_history_info(self, history, model_name, plot_name, metric = "mse", verbose = False):
-            #Inspired by conversation with Cris B. 
+            #Inspired by conversation with Cris B.
         if verbose:
             print("Saving the history paramters file")
         history_param_file = "".join([self.__model_dir, model_name,"_param.csv"])
-        dct = {k:[v] for k,v in history.params.items()} 
+        dct = {k:[v] for k,v in history.params.items()}
         history_params = pd.DataFrame(dct)
         history_params.to_csv(history_param_file)
 
@@ -117,17 +117,17 @@ class LoadTrainModels(object):
         hist = pd.DataFrame(history.history)
         hist.to_csv(history_file)
 
-        if verbose: 
+        if verbose:
             print("Creating plots")
-        
+
         fig = plt.figure(figsize=(15,8),dpi=100)
         fig.suptitle(model_name)
         ax = fig.add_subplot(1,2,1)
-        
+
         #https://stackoverflow.com/questions/25812255/row-and-column-headers-in-matplotlibs-subplots
         #https://matplotlib.org/stable/tutorials/intermediate/constrainedlayout_guide.html#sphx-glr-tutorials-intermediate-constrainedlayout-guide-py
         #https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.subplot.html
-        
+
         #Plot Loss vs Epoch
         ax.plot(history.history['loss'][1:], label = 'Train',marker = 'o', markersize = 3, alpha = 0.9)
         ax.plot(history.history["".join(["val_loss"])][1:], label = 'Validation',marker = 'o', markersize = 3, alpha = 0.9)
@@ -151,7 +151,7 @@ class LoadTrainModels(object):
 
         plt.tight_layout()
         plt.savefig(plot_name, dpi=300)
-        if verbose: 
+        if verbose:
             print("Plot saved")
         plt.close()
 
@@ -163,7 +163,7 @@ class LoadTrainModels(object):
     #######################################
     def __get_model_jn(self,model_name, X, Y, l_batch_size, l_epochs, l_validation_split = .01, l_shuffle = True, layers = 7, verbose = True):
         #Inspired by https://medium.com/@mgazar/lenet-5-in-9-lines-of-code-using-keras-ac99294c8086
-            
+
         model_file_name = "".join([self.__model_dir, model_name,".h5"])
         model_json_file = "".join([self.__model_dir, model_name,".json"])
         model_plot_name = "".join([self.__model_dir, model_name,"_plot.png"])
@@ -195,7 +195,7 @@ class LoadTrainModels(object):
             model.add(Convolution2D(filters = 6, kernel_size = (3, 3), input_shape = (96, 96, 1)))
             model.add(ReLU())
             model.add(AveragePooling2D())
-            
+
             if layers > 1:
                 model.add(Convolution2D(filters = 16, kernel_size = (3, 3)))
                 model.add(ReLU())
@@ -210,9 +210,9 @@ class LoadTrainModels(object):
             if layers > 4:
                 model.add(Dense(128))
                 model.add(ReLU())
-            
+
             model.add(Dense(30))
-            
+
             if verbose:
                 print(model.summary())
 
@@ -222,7 +222,7 @@ class LoadTrainModels(object):
             #https://keras.io/api/models/model_training_apis/
             compliled_model.compile(optimizer = act, loss = lss, metrics = mtrc)
 
-            if verbose: 
+            if verbose:
                 print("Compiling complete")
 
             #https://keras.io/api/models/model_training_apis/
@@ -231,13 +231,13 @@ class LoadTrainModels(object):
             # A History object. Its History.history attribute is a record of training loss values and metrics values at successive epochs, as well as validation loss values and validation metrics values (if applicable).
             # Might be interesting to plot this....
             history = compliled_model.fit(X, Y, validation_split = l_validation_split, batch_size = l_batch_size * GPU_count, epochs = l_epochs, shuffle = l_shuffle, callbacks = [es, cp], verbose = verbose)
-            
-            if verbose: 
+
+            if verbose:
                 print("Fitting complete")
 
-            #Save all of this history information so we can inlude in our final report   
+            #Save all of this history information so we can inlude in our final report
             self.__save_history_info(history, model_name, model_plot_name, verbose = False)
-            
+
             #Save the model and we can version these ... might want to make it so I can modify the names for different versions and configs??
             model_json = compliled_model.to_json()
             with open(model_json_file, "w") as json_file:
@@ -247,7 +247,7 @@ class LoadTrainModels(object):
                 print(f"{model_name} model created and file saved for future use.")
         else:
             #We already have a model file, so retrieve and return it.
-            #I would like to use this for future use. I can always make predictions. 
+            #I would like to use this for future use. I can always make predictions.
             history_file = "".join([self.__model_dir, model_name,"_hist.csv"])
             history = pd.read_csv(history_file)
             model = self.__load_model_from_file(model_name, model_file_name, model_json_file, verbose = True)
@@ -257,7 +257,7 @@ class LoadTrainModels(object):
 
 
     def __get_model_jcw(self,model_name, X, Y, l_batch_size, l_epochs, l_validation_split = .2, x_val = None, y_val = None, l_shuffle = True, verbose = True, separate = False):
-                    
+
 
         model_file_name = "".join([self.__model_dir, model_name,".h5"])
         model_json_file = "".join([self.__model_dir, model_name,".json"])
@@ -329,7 +329,7 @@ class LoadTrainModels(object):
             #https://keras.io/api/models/model_training_apis/
             compiled_model.compile(optimizer = act, loss = lss, metrics = mtrc)
 
-            if verbose: 
+            if verbose:
                 print("Compiling complete")
 
             #https://keras.io/api/models/model_training_apis/
@@ -337,10 +337,10 @@ class LoadTrainModels(object):
             #This return a history object:
 
             history = compiled_model.fit(X, Y, validation_split = l_validation_split, batch_size = l_batch_size * GPU_count, epochs = l_epochs, shuffle = l_shuffle, callbacks = [es, cp], verbose = verbose)
-            
-            if verbose: 
+
+            if verbose:
                 print("Fitting complete")
-                
+
             #self.__save_history_info(history, model_name, model_plot_name, verbose = False)
 
 
@@ -359,12 +359,12 @@ class LoadTrainModels(object):
             history_file = "".join([self.__model_dir, model_name,"_hist.csv"])
             history = pd.read_csv(history_file)
             model = self.__load_model_from_file(model_name, model_file_name, model_json_file, verbose = True)
-            
+
         return model, history
 
     def __get_model_sp(self,model_name, X, Y, l_batch_size, l_epochs, l_validation_split = .2, x_val = None, y_val = None, l_shuffle = True, verbose = True, separate = False):
         #Number of features/outputs
-        
+
         model_file_name = "".join([self.__model_dir, model_name,".h5"])
         model_json_file = "".join([self.__model_dir, model_name,".json"])
         model_plot_name = "".join([self.__model_dir, model_name,"_plot.png"])
@@ -379,85 +379,86 @@ class LoadTrainModels(object):
 
                 GPU_count = len(tf.config.list_physical_devices('GPU'))
 
-        #create a model and return it? or save it?
-        #act = Adam(lr = 0.01, beta_1 = 0.9, beta_2 = 0.999, epsilon = 1e-8)
-        sgd = SGD(lr=0.01, momentum=0.9, nesterov=True)
-        lss = 'mean_squared_error'
-        mtrc = ['mae','mse']
+            #create a model and return it? or save it?
+            #act = Adam(lr = 0.01, beta_1 = 0.9, beta_2 = 0.999, epsilon = 1e-8)
+            sgd = SGD(lr=0.001, momentum=0.9, nesterov=True)
+            lss = 'mean_squared_error'
+            mtrc = ['mae','mse']
 
-        #Used for the fitting step
-        stop_at = np.max([int(0.1 * l_epochs), 10])
-        es = EarlyStopping(patience = stop_at, verbose = verbose)
-        cp = ModelCheckpoint(filepath = model_file_name, verbose = verbose, save_best_only = True,
-            mode = 'min', monitor = 'val_mae')
+            #Used for the fitting step
+            stop_at = np.max([int(0.1 * l_epochs), 10])
+            es = EarlyStopping(patience = stop_at, verbose = verbose)
+            cp = ModelCheckpoint(filepath = model_file_name, verbose = verbose, save_best_only = True,
+                mode = 'min', monitor = 'val_mae')
 
-        if GPU_count > 1:
-            dev = "/cpu:0"
-        else:
-            dev = "/gpu:0"
+            if GPU_count > 1:
+                dev = "/cpu:0"
+            else:
+                dev = "/gpu:0"
 
-        # Need to reshape X for my model to work
-        X_reshape = X.reshape(-1, 96, 96, 1)
+            # Need to reshape X for my model to work
+            X_reshape = X.reshape(-1, 96, 96, 1)
 
-        with tf.device(dev):
-            model = Sequential()
-            model.add(Conv2D(32, (3,3), input_shape=(96,96,1)))
-            model.add(Activation('relu'))
-            model.add(MaxPooling2D(pool_size=(2,2)))
+            with tf.device(dev):
+                model = Sequential()
+                model.add(Conv2D(32, (3,3), input_shape=(96,96,1)))
+                model.add(Activation('relu'))
+                model.add(MaxPooling2D(pool_size=(2,2)))
 
-            model.add(Conv2D(64, (2,2)))
-            model.add(Activation('relu'))
-            model.add(MaxPooling2D(pool_size =(2,2)))
+                model.add(Conv2D(64, (2,2)))
+                model.add(Activation('relu'))
+                model.add(MaxPooling2D(pool_size =(2,2)))
 
-            model.add(Conv2D(64, (2,2)))
-            model.add(Activation('relu'))
-            model.add(MaxPooling2D(pool_size =(2,2)))
+                model.add(Conv2D(64, (2,2)))
+                model.add(Activation('relu'))
+                model.add(MaxPooling2D(pool_size =(2,2)))
 
-            model.add(Flatten())
+                model.add(Flatten())
 
-            model.add(Dense(500))
-            model.add(Activation('relu'))
+                model.add(Dense(500))
+                model.add(Activation('relu'))
 
-            model.add(Dense(500))
-            model.add(Activation('relu'))
+                model.add(Dense(500))
+                model.add(Activation('relu'))
 
-            model.add(Dense(500))
-            model.add(Activation('relu'))
+                model.add(Dense(500))
+                model.add(Activation('relu'))
 
-            model.add(Dense(30))
+                model.add(Dense(30))
 
-        if verbose:
-            print(model.summary())
+            if verbose:
+                print(model.summary())
 
-        compiled_model = model
+            compiled_model = model
 
-        compiled_model.compile(optimizer = sgd, loss = lss, metrics = mtrc)
+            compiled_model.compile(optimizer = sgd, loss = lss, metrics = mtrc)
 
-        if verbose: 
-            print("Compiling complete")
+            if verbose:
+                print("Compiling complete")
 
-        history = compiled_model.fit(X_reshape, Y, validation_split = l_validation_split, batch_size = l_batch_size * GPU_count, epochs = l_epochs, shuffle = l_shuffle, callbacks = [es, cp], verbose = verbose)
-        if verbose: 
-            print("Fitting complete")
+            history = compiled_model.fit(X_reshape, Y, validation_split = l_validation_split, batch_size = l_batch_size * GPU_count, epochs = l_epochs, shuffle = l_shuffle, callbacks = [es, cp], verbose = verbose)
+            if verbose:
+                print("Fitting complete")
 
-        self.__save_history_info(history, model_name, model_plot_name, verbose = False)
+            self.__save_history_info(history, model_name, model_plot_name, verbose = False)
 
-        #Save the model and we can version these ... might want to make it so I can modify the names for different versions and configs??
-        model_json = compiled_model.to_json()
-        with open(model_json_file, "w") as json_file:
-            json_file.write(model_json)
+            #Save the model and we can version these ... might want to make it so I can modify the names for different versions and configs??
+            model_json = compiled_model.to_json()
+            with open(model_json_file, "w") as json_file:
+                json_file.write(model_json)
 
-        #Plotting history
-        plot_history(history)
+            #Plotting history
+            plot_history(history)
 
-        if verbose:
-            print(f"{model_name} model created and file saved for future use.")
+            if verbose:
+                print(f"{model_name} model created and file saved for future use.")
+
         else:
             #We already have a model file, so retrieve and return it.
             history_file = "".join([self.__model_dir, model_name,"_hist.csv"])
             history = pd.read_csv(history_file)
             model = self.__load_model_from_file(model_name, model_file_name, model_json_file, verbose = True)
-            
+
 
         return model, history
 
@@ -471,7 +472,7 @@ class LoadTrainModels(object):
     #######################################
     def print_paths(self):
         print("Model dir:", self.__model_dir)
-        
+
 
 
 
@@ -492,11 +493,11 @@ class LoadTrainModels(object):
         #Flip the image if True
         if hoizontal_flip:
             train_scaled = data_transform.FlipHorizontal(train_scaled, verbose = True)
-        
-        
+
+
         #Bright_Dim(self, train, level_of_brightness = 1.4, level_to_dim = 0.3, verbose = False)
         train_scaled = data_transform.Bright_Dim(train_scaled, level_of_brightness = brightness, level_to_dim = dim,verbose = verbose)
-        
+
         #Split train and scale accordingly
         # #do the split here and pass in parameters
         if(split):
@@ -515,7 +516,7 @@ class LoadTrainModels(object):
             raise RuntimeError("Incorrect model name. Please verify and try again." )
         return model, history
 
-    
+
     def train_jcw(self, model_name, train, split=True, X=None, Y=None, verbose = True, separate = False):
         if separate :
             #Only use some of the train
@@ -524,7 +525,7 @@ class LoadTrainModels(object):
                           'image']
             train = train[train_cols].copy()
 
-        
+
         data_transform = transform_data.TransformData(verbose=True)
         #Scale train
         train_scaled = data_transform.ScaleImages(train, verbose = True)
@@ -549,7 +550,7 @@ class LoadTrainModels(object):
                           'nose_tip_x', 'nose_tip_y', 'mouth_center_bottom_lip_x', 'mouth_center_bottom_lip_y',
                           'image']
             train = train[train_cols].copy()
-        
+
         data_transform = transform_data.TransformData(verbose=True)
         #Scale train
         train_scaled = data_transform.ScaleImages(train, verbose = True)
