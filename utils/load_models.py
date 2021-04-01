@@ -377,7 +377,6 @@ class LoadTrainModels(object):
             if verbose:
                 print("SP model file not found. Model creation beginning")
 
-                GPU_count = len(tf.config.list_physical_devices('GPU'))
 
             #create a model and return it? or save it?
             #act = Adam(lr = 0.01, beta_1 = 0.9, beta_2 = 0.999, epsilon = 1e-8)
@@ -391,40 +390,34 @@ class LoadTrainModels(object):
             cp = ModelCheckpoint(filepath = model_file_name, verbose = verbose, save_best_only = True,
                 mode = 'min', monitor = 'val_mae')
 
-            if GPU_count > 1:
-                dev = "/cpu:0"
-            else:
-                dev = "/gpu:0"
-
             # Need to reshape X for my model to work
             X_reshape = X.reshape(-1, 96, 96, 1)
 
-            with tf.device(dev):
-                model = Sequential()
-                model.add(Conv2D(32, (3,3), input_shape=(96,96,1)))
-                model.add(Activation('relu'))
-                model.add(MaxPooling2D(pool_size=(2,2)))
+            model = Sequential()
+            model.add(Conv2D(32, (3,3), input_shape=(96,96,1)))
+            model.add(Activation('relu'))
+            model.add(MaxPooling2D(pool_size=(2,2)))
 
-                model.add(Conv2D(64, (2,2)))
-                model.add(Activation('relu'))
-                model.add(MaxPooling2D(pool_size =(2,2)))
+            model.add(Conv2D(64, (2,2)))
+            model.add(Activation('relu'))
+            model.add(MaxPooling2D(pool_size =(2,2)))
 
-                model.add(Conv2D(64, (2,2)))
-                model.add(Activation('relu'))
-                model.add(MaxPooling2D(pool_size =(2,2)))
+            model.add(Conv2D(64, (2,2)))
+            model.add(Activation('relu'))
+            model.add(MaxPooling2D(pool_size =(2,2)))
 
-                model.add(Flatten())
+            model.add(Flatten())
 
-                model.add(Dense(500))
-                model.add(Activation('relu'))
+            model.add(Dense(500))
+            model.add(Activation('relu'))
 
-                model.add(Dense(500))
-                model.add(Activation('relu'))
+            model.add(Dense(500))
+            model.add(Activation('relu'))
 
-                model.add(Dense(500))
-                model.add(Activation('relu'))
+            model.add(Dense(500))
+            model.add(Activation('relu'))
 
-                model.add(Dense(30))
+            model.add(Dense(30))
 
             if verbose:
                 print(model.summary())
@@ -436,7 +429,7 @@ class LoadTrainModels(object):
             if verbose:
                 print("Compiling complete")
 
-            history = compiled_model.fit(X_reshape, Y, validation_split = l_validation_split, batch_size = l_batch_size * GPU_count, epochs = l_epochs, shuffle = l_shuffle, callbacks = [es, cp], verbose = verbose)
+            history = compiled_model.fit(X_reshape, Y, validation_split = l_validation_split, batch_size = l_batch_size, epochs = l_epochs, shuffle = l_shuffle, callbacks = [es, cp], verbose = verbose)
             if verbose:
                 print("Fitting complete")
 
