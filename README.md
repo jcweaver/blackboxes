@@ -64,6 +64,8 @@ e. "clean_o_dups" : removing all duplicates and overlap outliers
 f. "clean_w_dups" : removing all duplicates and the worst outliers, which are the 4 mislabelled images and 4 worst images (two collages which are duplicates and two cartoons)
 g. "clean_wo_dups" : removing all duplicates, overlap outliers, and the worst outliers, which are the 4 mislabelled images and 4 worst images (two collages which are duplicates and two cartoons)
 
+![](https://i.imgur.com/S7FhUkH.jpg)
+
 4. **Training Pipeline**
 
 4.1 **Baseline Modelling**
