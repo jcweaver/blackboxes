@@ -14,6 +14,7 @@ from keras.callbacks import ReduceLROnPlateau, ModelCheckpoint, EarlyStopping
 from keras.optimizers import Adam, SGD
 from keras.regularizers import l2
 from keras import backend as K
+from keras.utils.vis_utils import plot_model
 import tensorflow as tf
 import matplotlib.pyplot as plt
 import sys
@@ -167,6 +168,7 @@ class LoadTrainModels(object):
         model_file_name = "".join([self.__model_dir, model_name,".h5"])
         model_json_file = "".join([self.__model_dir, model_name,".json"])
         model_plot_name = "".join([self.__model_dir, model_name,"_plot.png"])
+        model_layer_plot = "".join([self.__model_dir, model_name,"_layerplot.png"])
 
         if verbose:
             print("Looking for model JN")
@@ -175,6 +177,8 @@ class LoadTrainModels(object):
         if (not os.path.isfile(model_file_name)) or (not os.path.isfile(model_json_file)):
             if verbose:
                 print("JN model file not found. Model creation begnining")
+
+            GPU_count = len(tf.config.list_physical_devices('GPU'))
 
             #Try different values but use Adam
             #act = Adam(lr = 0.01, beta_1 = 0.9, beta_2 = 0.1, epsilon = 1e-8)
@@ -218,6 +222,7 @@ class LoadTrainModels(object):
 
             compliled_model = model
 
+            plot_model(model, to_file=model_layer_plot, show_shapes=True, show_layer_names=True)
             #play with these numbers.....
             #https://keras.io/api/models/model_training_apis/
             compliled_model.compile(optimizer = act, loss = lss, metrics = mtrc)
@@ -230,6 +235,10 @@ class LoadTrainModels(object):
             #This return a history object:
             # A History object. Its History.history attribute is a record of training loss values and metrics values at successive epochs, as well as validation loss values and validation metrics values (if applicable).
             # Might be interesting to plot this....
+
+            batch_size = l_batch_size * GPU_count
+            print("Batch size:", batch_size)
+            
             history = compliled_model.fit(X, Y, validation_split = l_validation_split, batch_size = l_batch_size * GPU_count, epochs = l_epochs, shuffle = l_shuffle, callbacks = [es, cp], verbose = verbose)
             
             if verbose: 
