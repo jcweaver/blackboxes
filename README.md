@@ -56,7 +56,6 @@ We ultimately decided to try many approaches to removing different sets of outli
 3. **Clean Data**
 
 As we decided to try our models on several versions of clean data with different approaches to dropping outliers and/or duplicates, we generally used the following clean data files on our models:
-
 a. "clean_o_outliers" : removing only overlap outliers, which is the set of outliers that are also duplicates
 b. "clean_w_outliers" : removing only the worst outliers, which are the 4 mislabelled images and 4 worst images (two collages which are duplicates and two cartoons)
 c. "clean_all_outliers" : removing all outliers which are all images with any keypoint that is located more than 2 standard deviations away from the mean for that keypoint.
@@ -65,8 +64,6 @@ e. "clean_o_dups" : removing all duplicates and overlap outliers
 f. "clean_w_dups" : removing all duplicates and the worst outliers, which are the 4 mislabelled images and 4 worst images (two collages which are duplicates and two cartoons)
 g. "clean_wo_dups" : removing all duplicates, overlap outliers, and the worst outliers, which are the 4 mislabelled images and 4 worst images (two collages which are duplicates and two cartoons)
 
-
-![](https://i.imgur.com/S7FhUkH.jpg)
 
 4. **Training Pipeline**
 
