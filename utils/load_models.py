@@ -1,7 +1,6 @@
 #######################################
 # Load Imports
 #######################################
-
 import pandas as pd
 import numpy as np
 import argparse
@@ -29,27 +28,34 @@ physical_devices = tf.config.list_physical_devices('GPU')
 for pd_dev in range(len(physical_devices)):
     tf.config.experimental.set_memory_growth(physical_devices[pd_dev], True)
 
-
+#Get the number of GPU's available
 def get_GPU_count():
     GPU_count = len(tf.config.list_physical_devices('GPU'))
     return GPU_count
 
-#TODO remove this as it was added to the class
-def plot_history(hist):
-    #Return value hist from the model fit can be used to plot
-    plt.plot(hist.history['loss'], linewidth=3, label='train')
-    plt.plot(hist.history['val_loss'], linewidth=3, label='valid')
-    plt.grid()
-    plt.legend()
-    plt.title("Loss vs epoch number")
-    plt.xlabel('epoch')
-    plt.ylabel('loss')
-    #plt.ylim(1e-3, 1e-2)
-    #plt.yscale('log')
-    plt.show()
-
+#######################################################################################
+# LoadTrainModels class
+# 
+# This class loads and trains models
+# It contains the following:
+# Private functions:
+# __init__ - initialize the class
+# __load_model_from_file - loads a model from json file
+# __save_history_info - save history, parameters and plot to specificed location
+# __plot_history - plot out results from model
+# __get_model_jn - build the model created by JN (based on Lenet5)
+# __get_model_jcw - build the model created by JCW
+# __get_model_sp - build the model created by SP
+#
+# Public functions:
+# print_paths - print the paths set for data files
+# train_model - generic function that prepares and redirects to correct 
+# private function for a model
+# train_sp - specific function that prepares and redirects to __get_model_sp
+#
+######################################################################################
 class LoadTrainModels(object):
-    ##### PRIVATE
+    ############################# PRIVATE FUNCTIONS #################################################
     def __init__(self, model_dir, pickle_path, verbose = False):
 
         # validate that the constructor parameters were provided by caller
@@ -72,12 +78,12 @@ class LoadTrainModels(object):
         self.__model_dir = model_dir
 
 
-    #######################################
-    # Load Models
+    ##################################################################################
+    # __load_model_from_file
     # Load a model from a specified json file
     #
     #
-    #######################################
+    ##################################################################################
     def __load_model_from_file(self,model_name, model_file, model_json, verbose = False):
         #Check to see if we have the files
         if not os.path.isfile(model_file):
@@ -97,12 +103,12 @@ class LoadTrainModels(object):
 
         return model
 
-    #######################################
-    # Save Model History Information
+    ##################################################################################
+    # __save_history_info
     #
     # Save a models history parameters, history and plot.
     #
-    #######################################
+    ##################################################################################
     def __save_history_info(self, history, model_name, plot_name, metric = "mse", verbose = False):
             #Inspired by conversation with Cris B.
         if verbose:
@@ -156,15 +162,33 @@ class LoadTrainModels(object):
             print("Plot saved")
         plt.close()
 
-    #######################################
-    # Get Models
+    ##################################################################################
+    # __plot_history 
+    # Plot out results from model
     #
-    # get_model_jn - Model written by Jackie based on Lenet5
-    #
-    #######################################
-    def __get_model_jn(self,model_name, X, Y, l_batch_size, l_epochs, l_validation_split = .01, l_shuffle = True, layers = 7, verbose = True):
-        #Inspired by https://medium.com/@mgazar/lenet-5-in-9-lines-of-code-using-keras-ac99294c8086
+    ##################################################################################
+    def __plot_history(self, hist):
+        #Return value hist from the model fit can be used to plot
+        plt.plot(hist.history['loss'], linewidth=3, label='train')
+        plt.plot(hist.history['val_loss'], linewidth=3, label='valid')
+        plt.grid()
+        plt.legend()
+        plt.title("Loss vs epoch number")
+        plt.xlabel('epoch')
+        plt.ylabel('loss')
+        #plt.ylim(1e-3, 1e-2)
+        #plt.yscale('log')
+        plt.show()
 
+    ##################################################################################
+    # get_model_jn - 
+    # Model written by Jackie based on Lenet5
+    #
+    # Inspired by:
+    # #Inspired by https://medium.com/@mgazar/lenet-5-in-9-lines-of-code-using-keras-ac99294c8086
+    ##################################################################################
+    def __get_model_jn(self,model_name, X, Y, l_batch_size, l_epochs, l_validation_split = .01, l_shuffle = True, layers = 7, verbose = True):
+        
         model_file_name = "".join([self.__model_dir, model_name,".h5"])
         model_json_file = "".join([self.__model_dir, model_name,".json"])
         model_plot_name = "".join([self.__model_dir, model_name,"_plot.png"])
@@ -231,8 +255,8 @@ class LoadTrainModels(object):
                 print("Compiling complete")
 
             #https://keras.io/api/models/model_training_apis/
-            #Validation data will override validation split so okay to include both
-            #This return a history object:
+            # Validation data will override validation split so okay to include both
+            # This return a history object:
             # A History object. Its History.history attribute is a record of training loss values and metrics values at successive epochs, as well as validation loss values and validation metrics values (if applicable).
             # Might be interesting to plot this....
 
@@ -246,6 +270,10 @@ class LoadTrainModels(object):
 
             #Save all of this history information so we can inlude in our final report
             self.__save_history_info(history, model_name, model_plot_name, verbose = False)
+
+            if verbose:
+                #Plotting history
+                __plot_history(history)
 
             #Save the model and we can version these ... might want to make it so I can modify the names for different versions and configs??
             model_json = compliled_model.to_json()
@@ -264,9 +292,12 @@ class LoadTrainModels(object):
         return model, history
 
 
-
+    ##################################################################################
+    # __get_model_jcw                               
+    # Build the model created by JCW                                                      
+    #
+    ##################################################################################
     def __get_model_jcw(self,model_name, X, Y, l_batch_size, l_epochs, l_validation_split = .2, x_val = None, y_val = None, l_shuffle = True, verbose = True, separate = False):
-
 
         model_file_name = "".join([self.__model_dir, model_name,".h5"])
         model_json_file = "".join([self.__model_dir, model_name,".json"])
@@ -295,40 +326,33 @@ class LoadTrainModels(object):
             cp = ModelCheckpoint(filepath = model_file_name, verbose = verbose, save_best_only = True,
                 mode = 'min', monitor = 'val_mae')
 
-            if GPU_count > 1:
-                dev = "/cpu:0"
-            else:
-                dev = "/gpu:0"
-            with tf.device(dev):
+            model = Sequential()
 
-                model = Sequential()
+            #Add layers
+            model.add(Convolution2D(32, 3, 3, input_shape=(96, 96,1), data_format='channels_last', use_bias=False))
+            model.add(Activation('relu'))
+            # we apply batch normalization, which applies a transformation that maintains
+            # the mean output close to 0 and the output standard deviation close to 1
+            model.add(BatchNormalization())
+            model.add(MaxPooling2D(pool_size=(2, 2)))
 
-                #Add layers
-                model.add(Convolution2D(32, 3, 3, input_shape=(96, 96,1), data_format='channels_last', use_bias=False))
-                model.add(Activation('relu'))
-                # we apply batch normalization, which applies a transformation that maintains
-                # the mean output close to 0 and the output standard deviation close to 1
-                model.add(BatchNormalization())
-                model.add(MaxPooling2D(pool_size=(2, 2)))
+            model.add(Convolution2D(64, 2, 2, use_bias=False))
+            model.add(Activation('relu'))
+            model.add(BatchNormalization())
+            model.add(MaxPooling2D(pool_size=(2, 2)))
 
-                model.add(Convolution2D(64, 2, 2, use_bias=False))
-                model.add(Activation('relu'))
-                model.add(BatchNormalization())
-                model.add(MaxPooling2D(pool_size=(2, 2)))
+            model.add(Convolution2D(128, 2, 2, use_bias=False))
+            model.add(Activation('relu'))
+            model.add(BatchNormalization())
+            model.add(MaxPooling2D(pool_size=(2, 2)))
 
-                model.add(Convolution2D(128, 2, 2, use_bias=False))
-                model.add(Activation('relu'))
-                model.add(BatchNormalization())
-                model.add(MaxPooling2D(pool_size=(2, 2)))
-
-                #Flatten transforms the fully connected layer so it can be read
-                model.add(Flatten())
-                model.add(Dense(512))
-                model.add(Activation('relu'))
-                model.add(Dense(512))
-                model.add(Activation('relu'))
-                model.add(Dense(30))
-
+            #Flatten transforms the fully connected layer so it can be read
+            model.add(Flatten())
+            model.add(Dense(512))
+            model.add(Activation('relu'))
+            model.add(Dense(512))
+            model.add(Activation('relu'))
+            model.add(Dense(30))
 
             if verbose:
                 print(model.summary())
@@ -353,8 +377,7 @@ class LoadTrainModels(object):
             if verbose:
                 print("Fitting complete")
 
-            #self.__save_history_info(history, model_name, model_plot_name, verbose = False)
-
+            self.__save_history_info(history, model_name, model_plot_name, verbose = False)
 
             #Save the model and we can version these ... might want to make it so I can modify the names for different versions and configs??
             model_json = compiled_model.to_json()
@@ -362,7 +385,7 @@ class LoadTrainModels(object):
                 json_file.write(model_json)
 
             #Plotting history
-            plot_history(history)
+            __plot_history(history)
 
             if verbose:
                 print(f"{model_name} model created and file saved for future use.")
@@ -374,6 +397,11 @@ class LoadTrainModels(object):
 
         return model, history
 
+    ##################################################################################
+    # __get_model_sp                               
+    # Build the model created by SP                                                     
+    #
+    ##################################################################################
     def __get_model_sp(self,model_name, X, Y, l_batch_size, l_epochs, l_validation_split = .2, x_val = None, y_val = None, l_shuffle = True, verbose = True, separate = False):
         #Number of features/outputs
 
@@ -456,7 +484,7 @@ class LoadTrainModels(object):
                 json_file.write(model_json)
 
             #Plotting history
-            plot_history(history)
+            __plot_history(history)
 
             if verbose:
                 print(f"{model_name} model created and file saved for future use.")
@@ -471,24 +499,22 @@ class LoadTrainModels(object):
         return model, history
 
 
-    ###### PUBLIC
-
-    #######################################
-    # PRINT PATHS
+    ############################# PUBLIC FUNCTIONS #################################################
+    
+    ##################################################################################
+    # print_paths                              
+    # Print the paths set for data files                                                     
     #
-    #
-    #######################################
+    ##################################################################################
     def print_paths(self):
         print("Model dir:", self.__model_dir)
 
 
-
-
-    #######################################
-    # Train Models
+    ##################################################################################
+    # train_model
+    # Generic function that prepares and redirects to correct
     #
-    #
-    #######################################
+    ##################################################################################
     def train_model(self, model_name, train, split=True, X=None, Y=None,hoizontal_flip = False, dim = 0.3, brightness = 1.4,layers = 7, verbose = True):
 
         data_transform = transform_data.TransformData(verbose=True)
@@ -524,33 +550,11 @@ class LoadTrainModels(object):
             raise RuntimeError("Incorrect model name. Please verify and try again." )
         return model, history
 
-
-    def train_jcw(self, model_name, train, split=True, X=None, Y=None, verbose = True, separate = False):
-        if separate :
-            #Only use some of the train
-            train_cols = ['left_eye_center_x', 'left_eye_center_y', 'right_eye_center_x', 'right_eye_center_y',
-                          'nose_tip_x', 'nose_tip_y', 'mouth_center_bottom_lip_x', 'mouth_center_bottom_lip_y',
-                          'image']
-            train = train[train_cols].copy()
-
-
-        data_transform = transform_data.TransformData(verbose=True)
-        #Scale train
-        train_scaled = data_transform.ScaleImages(train, verbose = True)
-        print(train_scaled.columns)
-
-        #Split train and scale accordingly
-        # #do the split here and pass in parameters
-        if(split):
-            X, Y = data_transform.SplitTrain(train_scaled)
-        elif X is None | Y is None:
-            raise RuntimeError(f"When Split is set to False, X and Y must be supplied." )
-
-        #Get and compile the model.
-        model, history = self.__get_model_jcw(model_name, X = X, Y = Y, l_batch_size = 128, l_epochs = 300, l_shuffle = True, separate = separate)
-
-        return model, history
-
+    ##################################################################################
+    # train_sp
+    # Specific function that prepares and redirects to __get_model_sp
+    #
+    ##################################################################################
     def train_sp(self, model_name, train, split=True, X=None, Y=None, verbose=True, separate = False):
         if separate :
             #Only use some of the train

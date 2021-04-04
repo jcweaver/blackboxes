@@ -13,9 +13,24 @@ from keras.models import Model, model_from_json
 from keras import backend as K
 import tensorflow as tf
 
-
+#######################################################################################
+# PredictModels class
+# 
+# This class takes a model and test set and makes predictions
+# It contains the following:
+#
+# Private functions:
+# __init__ - initialize the class
+# __load_model_from_file - loads a model from json file
+# __generate_prediction - creates a csv file of predictions
+#
+# Public functions:
+# print_paths - print the paths set for data files
+# predict_standard - generic function that prepares and generates predictions 
+#
+######################################################################################
 class PredictModels(object):
-    ##### PRIVATE
+    ############################# PRIVATE FUNCTIONS #################################################
     def __init__(self, model_dir,pred_dir, ids, verbose = False):
 
         # validate that the constructor parameters were provided by caller
@@ -38,10 +53,11 @@ class PredictModels(object):
         self.__ids = ids
 
 
-    #######################################
-    # Load Models
+    ##################################################################################
+    # __load_model_from_file
     # Load the model from a specfied json file
-    #######################################
+    #
+    ##################################################################################
     def __load_model_from_file(self,model_name, model_file, model_json, verbose = False):
 
         if not os.path.isfile(model_file):
@@ -60,11 +76,11 @@ class PredictModels(object):
 
         return model
 
-    #######################################
-    # Generate Predictions
-    # Genereate some prediction files that
-    # we can submit to Kaggle
-    #######################################
+    ##################################################################################
+    # __generate_prediction
+    # Genereate some prediction files that we can submit to Kaggle
+    #
+    ##################################################################################
     def __generate_prediction(self, model_name, Y, test, columns="Full", verbose = True):
 
         id_lookup = self.__ids
@@ -110,17 +126,22 @@ class PredictModels(object):
         Y.to_csv(new_file, index = False)
         print("Predictions written ")
 
-    ##### PUBLIC
-    #######################################
-    # Print paths
-    #######################################
+    ############################# PUBLIC FUNCTIONS #################################################
+    
+    ##################################################################################
+    # print_paths
+    # Print the paths set for data files
+    #
+    ##################################################################################
     def print_paths(self):
         print("Model dir:", self.__model_dir)
         print("Pickle dir:", self.__pred_dir)
 
-    #######################################
-    # Predict Models
-    #######################################
+    ##################################################################################
+    # predict_standard
+    # Generic function that prepares and generates predictions
+    # Inspired by https://www.kaggle.com/balraj98
+    ##################################################################################
     def predict_standard(self, model_name,model_file, model_json, test, scale = True, X=None, verbose = False, columns = "Full"):
 
         model_file_name = "".join([self.__model_dir, model_file])

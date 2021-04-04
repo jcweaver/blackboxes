@@ -9,8 +9,27 @@ from scipy import ndimage
 import pickle
 import os.path
 
+#######################################################################################
+# TransformData class
+# 
+# This class is used to transform data in a number of ways
+# It contains the following:
+#
+# Private functions:
+# __init__ - initialize the class
+# __get_coordinate_columns - returns a list of (x,y) coordinate columns
+# __get_coordinate_dict_flipped - return the list of (x,y) coordinate columns flipped
+# horizontally 
+#
+# Public functions:
+# FlipHorizontal - flips the images horizontally 
+# Bright_Dim - brighten and/or dim an image
+# ScaleImages - Scale the Images by 255
+# Split Train - Split the train data into X and Y and in the proper shape
+# Split Test - Split the train data into X and Y and in the proper shape
+######################################################################################
 class TransformData(object):
-    ##### PRIVATE
+    ############################# PRIVATE FUNCTIONS #################################################
     #Let's make this easy for everyone to use since we all have different paths for our files
     #pickles_path - file where all the yummy pickle files are
     def __init__(self, scale = 255.0, reshape = 96, verbose = False, prop = 0.1):
@@ -25,7 +44,12 @@ class TransformData(object):
 
 
     #Rakesh to add rotate, etc. 
-
+    ##################################################################################
+    #  __get_coordinate_columns
+    #   
+    # Return the list of (x,y) coordinate columns 
+    #   
+    ##################################################################################  
     def __get_coordinate_columns(self, df, x = True, y = True):
 
         if x & y:
@@ -36,6 +60,12 @@ class TransformData(object):
             coordinates = [c for c in df.columns if c.endswith('_y')]
         return coordinates
 
+    ##################################################################################
+    #  __get_coordinate_dict_flipped
+    #   
+    # Return the list of (x,y) coordinate columns flipped horizontally
+    #   
+    ##################################################################################  
     #it might be easier to work wtih a dictionary as these are pairs??
     def __get_coordinate_dict_flipped(self):
         coord = {
@@ -67,14 +97,16 @@ class TransformData(object):
         return coord
 
     
-    ##### PUBLIC
-    ###########################################
-    #  Flip Horizonal
+    ############################# PUBLIC FUNCTIONS #################################################
+
+
+    ##################################################################################
+    #  FlipHorizonal
     #  Used to flip images horizontaly 
     #  Inspired from
     #  https://www.kaggle.com/balraj98/data-augmentation-for-facial-keypoint-detection
     #
-    ###########################################   
+    ##################################################################################  
     def FlipHorizontal(self, train, verbose = False):
         #Flip the images horizontaly and adjust the labels. 
         
@@ -111,15 +143,16 @@ class TransformData(object):
             print(f"New Horizontal shape: {adj_train.shape}")
         return adj_train
 
-    #
-    ###########################################
-    #  Bright and Dim
+
+    ##################################################################################
+    #  Bright_Dim
     #  Used to brighten or dim an image
     #  Inspired from
     #  https://www.kaggle.com/balraj98/data-augmentation-for-facial-keypoint-detection
     #
     #  https://scipy-lectures.org/advanced/image_processing/
     #  https://www.tutorialspoint.com/scipy/scipy_ndimage.htm
+    ##################################################################################
     def Bright_Dim(self, train, level_of_brightness = 1, level_to_dim = 1, verbose = False):
         
         #Used to brighten
@@ -154,11 +187,13 @@ class TransformData(object):
         return bright_train   
 
 
-    ###########################################
-    #  Scale Images - scale images by 255
+    ##################################################################################
+    #  ScaleImages
+    #  Scale images by 255
     #  Inspired by
     #  https://www.kaggle.com/balraj98/data-augmentation-for-facial-keypoint-detection#Exploring-Data
-    ###########################################
+    #
+    ##################################################################################
     def ScaleImages(self, df, verbose = False):
         #For most CNN we will need to scale the images by 255. 
         if verbose: 
@@ -176,11 +211,11 @@ class TransformData(object):
         return df
 
 
-    ###########################################
-    #  Split Train
-    # Split the train data into X and Y and in
-    # the proper shape
-    ###########################################
+    ##################################################################################
+    # SplitTrain
+    # Split the train data into X and Y and in the proper shape
+    # 
+    ##################################################################################
     def SplitTrain(self, train, verbose = True):
         #Split the train data into X,Y and in the proper shape
         #Everyone should be able to use this
@@ -212,11 +247,11 @@ class TransformData(object):
 
         return X, Y
         
-    ###########################################
-    #  Split Test
-    # Split the Test data into X and subset and in
-    # the proper shape
-    ###########################################
+    ##################################################################################
+    # SplitTest
+    # Split the Test data into X and subset and in the proper shape
+    # 
+    ##################################################################################
     def SplitTest(self, test, ids, verbose = False):
         
         if verbose:
