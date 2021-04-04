@@ -271,6 +271,7 @@ class LoadTrainModels(object):
         model_file_name = "".join([self.__model_dir, model_name,".h5"])
         model_json_file = "".join([self.__model_dir, model_name,".json"])
         model_plot_name = "".join([self.__model_dir, model_name,"_plot.png"])
+        model_layer_plot = "".join([self.__model_dir, model_name,"_layerplot.png"])
 
         if verbose:
             print("Looking for model JW")
@@ -333,7 +334,9 @@ class LoadTrainModels(object):
                 print(model.summary())
 
             compiled_model = model
-
+            
+            plot_model(model, to_file=model_layer_plot, show_shapes=True, show_layer_names=True)
+        
             #play with these numbers.....
             #https://keras.io/api/models/model_training_apis/
             compiled_model.compile(optimizer = act, loss = lss, metrics = mtrc)
@@ -377,6 +380,7 @@ class LoadTrainModels(object):
         model_file_name = "".join([self.__model_dir, model_name,".h5"])
         model_json_file = "".join([self.__model_dir, model_name,".json"])
         model_plot_name = "".join([self.__model_dir, model_name,"_plot.png"])
+        model_layer_plot = "".join([self.__model_dir, model_name,"_layerplot.png"])
 
         if verbose:
             print("Looking for model SP")
@@ -432,6 +436,8 @@ class LoadTrainModels(object):
                 print(model.summary())
 
             compiled_model = model
+            
+            plot_model(model, to_file=model_layer_plot, show_shapes=True, show_layer_names=True)
 
             compiled_model.compile(optimizer = sgd, loss = lss, metrics = mtrc)
 
