@@ -135,7 +135,7 @@ class PredictModels(object):
     ##################################################################################
     def print_paths(self):
         print("Model dir:", self.__model_dir)
-        print("Pickle dir:", self.__pred_dir)
+        print("Prediction dir:", self.__pred_dir)
 
     ##################################################################################
     # predict_standard
