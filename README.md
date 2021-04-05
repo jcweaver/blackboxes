@@ -92,7 +92,34 @@ In general, performance varied between models and datasets, with the linear, las
 
 4.2 **Final Models**
 
-4.2.1 **Model 1 (JN)/LeNet 5**
+4.2.1 **Model 1 (JN)/LeNet5 Inspired**
+
+This model produces a number of Lenet5 inspired Models and Predictions based on varying degrees of cleaned Train data and augmentation. The inspiration came from the Mediaum article ["Lenet5 in 9 lines of code using Keras"](https://medium.com/@mgazar/lenet-5-in-9-lines-of-code-using-keras-ac99294c8086).
+Several layers were added to arrive at the final version of 15 layers following a large amount of testing. It takes as input a 2D input dataset (96,96,1) followed by a 2 sets of [2D convolution layers + rectified linear unit (RELU) + 2DAverage Pooling] x 3 Dense layers.  
+
+The following variations of models were created:
+
+- baseline, no augmentation 
+- Approach 1: 7 previously mentioned versions of cleaned train data set were used to create models and predictions (best result came from this test)
+- Approach 2: 7 previously mentioned versions of cleaned train data set were used + varying the layers in the model used to create models and predictions
+- Approach 3: 7 previously mentioned versions of cleaned train data set were used + varying layers + image augmentation (brightness and dim) to create models and predictions
+- Approach 4: 7 previously mentioned versions of cleaned train data set were used + varying layers + image augmentation (horizontal flip) to create models and predictions
+
+All training for all models was fixed at a 128 batch size, 300 epochs with a patience set at 30 (with early stop set). Adam optimization was used with an initial learning rate of 0.01 and later changed to 0.001, beta of 0.9, beta2 of 0.999 and epsilon=1e-8 (following standards and examples)
+
+`act = Adam(lr = 0.001, beta_1 = 0.9, beta_2 = 0.999, epsilon = 1e-8)`
+`lss = 'mean_squared_error'`
+
+The best result was from approach 2 from the model using the clean data with all outliers removed yielding: 3.23581  
+
+Placing at position 72 on the leaderboard
+
+![](https://i.imgur.com/kbpD4Eo.jpg)
+
+The best performing model plot can be see below: 
+
+![](https://i.imgur.com/ltAzPj6.png)
+
 
 4.2.2 **Model 2 (JCW)**
 
