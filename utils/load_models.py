@@ -391,7 +391,7 @@ class LoadTrainModels(object):
                 json_file.write(model_json)
 
             #Plotting history
-            self.__plot_history(history)
+            #self.__plot_history(history)
 
             if verbose:
                 print(f"{model_name} model created and file saved for future use.")
