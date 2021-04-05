@@ -125,9 +125,10 @@ class TransformData(object):
         # shift all 'x' values by linear mirroring
         for c in cols:
             mod = adj_train[c].values
-            mod = np.clip(np.float(0 - 95) - mod, np.float(0), np.float(95))
-            adj_train[c] = mod
-
+            #mod = np.clip(np.float(0 - 95) - mod, np.float(0), np.float(95))
+            adj_train[c] = 96 - mod
+        #if verbose:
+            #print (adj_train)
         #Get the columns so we can reorder later
         cols = adj_train.columns
         if verbose:

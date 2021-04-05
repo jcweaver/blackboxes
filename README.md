@@ -73,13 +73,13 @@ As we decided to try our models on several versions of clean data with different
 
 Though our final goal was to utilize neural networks for predicting the facial keypoints, we decided to first use some simpler machine learning models to develop a baseline, help us develop our final data pipeline and fine tune our EDA and data cleaning processes. As this is a regression problem, we selected several models from the SciKitLearn library. In general, none of these models performed particularly well based upon the mean squared error and $\R^2$. Moreover, they were particularly slow to run. 
 
-**Datasets Used:**
+4.1.1 **Datasets Used for Baseline Models:**
 
 a. Raw dataset - No modifications, all missing values filled in with mean of respective column.<br />
 b. Duplicates removed - All duplicates removed with missing values filled in with the mean of the respective column.<br />
 c. Augmented dataset - Utilized a custom-built linear model to predict the value of the missing data points.<br />
 
-**Models**
+4.1.2 **Baseline Model Results**
 
 a. Ordinary Least Squares Regression<br />
 b. Ridge Regression<br />
@@ -90,6 +90,20 @@ f. Random Forest Regression (with 5 estimators)<br />
 
 In general, performance varied between models and datasets, with the linear, lasso and ridge regression models, and decision tree regression, giving very poor (negative $\R^2$) performance. Best performance was achieved using K-Nearest Neighbors regression with 7 neighbors and using the raw dataset. This might be because the raw dataset, as opposed to the duplicate-removed dataset gives more training examples. Random forest regression performed slightly worse than the K-Nearest Neighbors models, but still better than the others, with optimal performance given using the augmented dataset. Another interesting finding from this initial modelling process is that angled faces, eyeglasses and childrens faces seemed to pose the biggest predictive challenge for these baseline models.
 
+4.2 **Final Models**
+
+4.2.1 **Model 1 (JN)/LeNet 5**
+
+4.2.2 **Model 2 (JCW)**
+
+4.2.4 **Model 3 (SP)**
+
+This model was based upon a blog post entitled ["Achieving Top 23% in Kaggle's Facial Keypoints Detection with Keras + Tensorflow"](https://fairyonice.github.io/achieving-top-23-in-kaggles-facial-keypoints-detection-with-keras-tensorflow.html), by Shinya Yuki, which itself is an adaptation of [Daniel Nouri's approach](https://danielnouri.org/notes/2014/12/17/using-convolutional-neural-nets-to-detect-facial-keypoints-tutorial/) to this challenge using the now deprecated Lasagne package for CNN's. The original package was released prior to the release of the Keras library, so Yuki's version represents an update. The model was adapted to take data that had been pre-processed using our EDA and data cleaning pipeline. 
+
+The model is essentially the same, taking a 4D input dataset (1, 96, 96, 1) and has 3 x 2D convolution layers with 32-64-128 filters (doubles each layer). Each convolutional layer is followed by a 2x2 max-pooling layer and there are 2 fully-connected layers. The densely-connected layers have 500 units each. The model uses rectified linear unit (‘ReLU’) activation in each layer, a Nesterov-accelerated gradient descent (SGD) optimizer with a learning rate of 0.01 and a momentum parameter of 0.9. The model was trained using batches of 128 examples, and for 300 epochs. The only way the model was modified from the examples was that for simplicity, the dropout layer functionality was omitted.
+
+This model achieved modest perfomance in terms of the metrics of interest, and performed best using the cleaned dataset with overlapping outliers (Kaggle score 4.15) and the cleaned dataset with duplicates (Kaggle score 4.33), which is ~150th position on the leaderboard. Augmented data did not improve its performance past the scores listed. 
+
 * TBD
 * TBD
 * TBD
@@ -99,14 +113,6 @@ In general, performance varied between models and datasets, with the linear, las
 
 The models that were implemented as part of this challenge are:
 
-## Models
-
-### LeNet5
-
-
-
-
- 
 
 
 
