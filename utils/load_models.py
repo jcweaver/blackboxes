@@ -273,7 +273,7 @@ class LoadTrainModels(object):
 
             if verbose:
                 #Plotting history
-                __plot_history(history)
+                self.__plot_history(history)
 
             #Save the model and we can version these ... might want to make it so I can modify the names for different versions and configs??
             model_json = compliled_model.to_json()
@@ -385,7 +385,7 @@ class LoadTrainModels(object):
                 json_file.write(model_json)
 
             #Plotting history
-            __plot_history(history)
+            self.__plot_history(history)
 
             if verbose:
                 print(f"{model_name} model created and file saved for future use.")
@@ -484,7 +484,7 @@ class LoadTrainModels(object):
                 json_file.write(model_json)
 
             #Plotting history
-            __plot_history(history)
+            self.__plot_history(history)
 
             if verbose:
                 print(f"{model_name} model created and file saved for future use.")
@@ -539,7 +539,7 @@ class LoadTrainModels(object):
         elif X is None | Y is None:
             raise RuntimeError(f"When Split is set to False, X and Y must be supplied." )
 
-        if "jn" in model_name:
+        if "Lenet5" in model_name:
             #Get and compile the model.
             model, history = self.__get_model_jn(model_name, X = X, Y = Y, l_batch_size = 128, l_epochs = 300, l_shuffle = True,layers=layers)
         elif "jcw" in model_name:
