@@ -94,9 +94,9 @@ In general, performance varied between models and datasets, with the linear, las
 
 4.2.1 **Model 1 (JN)/LeNet 5**
 
-4.2.2 **Model 2 (JCW) **
+4.2.2 **Model 2 (JCW)**
 
-4.2.4 **Model 3 (SP) **
+4.2.4 **Model 3 (SP)**
 
 This model was based upon a blog post entitled ["Achieving Top 23% in Kaggle's Facial Keypoints Detection with Keras + Tensorflow"](https://fairyonice.github.io/achieving-top-23-in-kaggles-facial-keypoints-detection-with-keras-tensorflow.html), by Shinya Yuki, which itself is an adaptation of [Daniel Nouri's approach](https://danielnouri.org/notes/2014/12/17/using-convolutional-neural-nets-to-detect-facial-keypoints-tutorial/) to this challenge using the now deprecated Lasagne package for CNN's. The original package was released prior to the release of the Keras library, so Yuki's version represents an update. The model was adapted to take data that had been pre-processed using our EDA and data cleaning pipeline. 
 
