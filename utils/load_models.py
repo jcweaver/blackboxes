@@ -295,7 +295,8 @@ class LoadTrainModels(object):
     ##################################################################################
     # __get_model_jcw                               
     # Build the model created by JCW                                                      
-    #
+    # Inspired by: https://elix-tech.github.io/ja/2016/06/02/kaggle-facial-keypoints-ja.html#conv
+    # For more details, refer to models/JCW_Model
     ##################################################################################
     def __get_model_jcw(self,model_name, X, Y, l_batch_size, l_epochs, l_validation_split = .2, x_val = None, y_val = None, l_shuffle = True, verbose = True, separate = False):
 
@@ -303,7 +304,12 @@ class LoadTrainModels(object):
         model_json_file = "".join([self.__model_dir, model_name,".json"])
         model_plot_name = "".join([self.__model_dir, model_name,"_plot.png"])
         model_layer_plot = "".join([self.__model_dir, model_name,"_layerplot.png"])
-
+        
+        #Code for combined model approach
+        num_features = 30
+        if separate:
+            num_features = 8
+        
         if verbose:
             print("Looking for model JW")
 
@@ -329,21 +335,21 @@ class LoadTrainModels(object):
             model = Sequential()
 
             #Add layers
-            model.add(Convolution2D(32, 3, 3, input_shape=(96, 96,1), data_format='channels_last', use_bias=False))
+            model.add(Convolution2D(32, 3, 3, input_shape=(96, 96,1), data_format='channels_last'))
             model.add(Activation('relu'))
-            # we apply batch normalization, which applies a transformation that maintains
+            # apply batch normalization, which applies a transformation that maintains
             # the mean output close to 0 and the output standard deviation close to 1
-            model.add(BatchNormalization())
+            #model.add(BatchNormalization())
             model.add(MaxPooling2D(pool_size=(2, 2)))
 
-            model.add(Convolution2D(64, 2, 2, use_bias=False))
+            model.add(Convolution2D(64, 2, 2))
             model.add(Activation('relu'))
-            model.add(BatchNormalization())
+            #model.add(BatchNormalization())
             model.add(MaxPooling2D(pool_size=(2, 2)))
 
-            model.add(Convolution2D(128, 2, 2, use_bias=False))
+            model.add(Convolution2D(128, 2, 2))
             model.add(Activation('relu'))
-            model.add(BatchNormalization())
+            #model.add(BatchNormalization())
             model.add(MaxPooling2D(pool_size=(2, 2)))
 
             #Flatten transforms the fully connected layer so it can be read
@@ -352,7 +358,7 @@ class LoadTrainModels(object):
             model.add(Activation('relu'))
             model.add(Dense(512))
             model.add(Activation('relu'))
-            model.add(Dense(30))
+            model.add(Dense(num_features))
 
             if verbose:
                 print(model.summary())
