@@ -7,7 +7,9 @@ ref: https://www.kaggle.com/c/facial-keypoints-detection
 
 ## Summary
 
-This repo contains work performed by Joanie Weaver, Sandip Panesar, Jackie Nichols, Rakesh Walisheter for the [Kaggle Facial Keypoint Detection](https://www.kaggle.com/c/facial-keypoints-detection) challenge as our final project for W207. This notebook contains several different neural networks with the XX approach yielding the best result of XX.   
+This repo contains work performed by Joanie Weaver, Sandip Panesar, Jackie Nichols, Rakesh Walisheter for the [Kaggle Facial Keypoint Detection](https://www.kaggle.com/c/facial-keypoints-detection) challenge as our final project for W207. This notebook contains several different neural networks with the Lenet5 inspired approach yielding the best result of 3.23581 placing at position 72 on the leaderboard
+
+![](https://i.imgur.com/kbpD4Eo.jpg) 
 
 
 ### The Challenge
@@ -27,7 +29,7 @@ The Kaggle facial detection challenge asks participants to identify the (x,y) co
 
 ### Performance
 
-This solution acheives a best score of **TBD RMSE** using the model, which places X place on the locked leaderboard. 
+This solution acheives a best score of **3.23581** using the Lenet5 inspired model, which places 72 place on the locked leaderboard. 
 
 ## Project Approach
 To reach the final output of the project and to support the summary findings above, TBD
@@ -90,7 +92,19 @@ f. Random Forest Regression (with 5 estimators)<br />
 
 In general, performance varied between models and datasets, with the linear, lasso and ridge regression models, and decision tree regression, giving very poor (negative $\R^2$) performance. Best performance was achieved using K-Nearest Neighbors regression with 7 neighbors and using the raw dataset. This might be because the raw dataset, as opposed to the duplicate-removed dataset gives more training examples. Random forest regression performed slightly worse than the K-Nearest Neighbors models, but still better than the others, with optimal performance given using the augmented dataset. Another interesting finding from this initial modelling process is that angled faces, eyeglasses and childrens faces seemed to pose the biggest predictive challenge for these baseline models.
 
+The notebook for the baseline models can be found [`here`](https://github.com/jcweaver/blackboxes/blob/master/models/initial_models.ipynb)
+
 4.2 **Final Models**
+
+The models that were implemented as part of this challenge are:
+
+|Model| Description |
+|:----|:------------|
+|[`models/Lenet5_Model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models/Lenet5_Model.ipynb)|A notebook of models inspired by Lenet5.|
+|[`models/JCW.Model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models/JCW_Model.ipynb)|Joanie to fill in.|
+|[`models/SP_model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models/SP_model.ipynb)|Sandip to fill in.|
+
+
 
 4.2.1 **Model 1 (JN)/LeNet5 Inspired**
 
@@ -100,14 +114,15 @@ Several layers were added to arrive at the final version of 15 layers following 
 The following variations of models were created:
 
 - baseline, no augmentation 
-- Approach 1: 7 previously mentioned versions of cleaned train data set were used to create models and predictions (best result came from this test)
-- Approach 2: 7 previously mentioned versions of cleaned train data set were used + varying the layers in the model used to create models and predictions
-- Approach 3: 7 previously mentioned versions of cleaned train data set were used + varying layers + image augmentation (brightness and dim) to create models and predictions
-- Approach 4: 7 previously mentioned versions of cleaned train data set were used + varying layers + image augmentation (horizontal flip) to create models and predictions
+- Approach 1: 7 previously mentioned versions of cleaned train data (clean section) set were used to create models and predictions (best result came from this test)
+- Approach 2: 7 previously mentioned versions of cleaned train data (clean section) set were used + varying the layers in the model used to create models and predictions
+- Approach 3: 7 previously mentioned versions of cleaned train data (clean section) set were used + varying layers + image augmentation (brightness and dim) to create models and predictions
+- Approach 4: 7 previously mentioned versions of cleaned train data (clean section) set were used + varying layers + image augmentation (horizontal flip) to create models and predictions
 
 All training for all models was fixed at a 128 batch size, 300 epochs with a patience set at 30 (with early stop set). Adam optimization was used with an initial learning rate of 0.01 and later changed to 0.001, beta of 0.9, beta2 of 0.999 and epsilon=1e-8 (following standards and examples)
 
 `act = Adam(lr = 0.001, beta_1 = 0.9, beta_2 = 0.999, epsilon = 1e-8)`
+
 `lss = 'mean_squared_error'`
 
 The best result was from approach 2 from the model using the clean data with all outliers removed yielding: 3.23581  
@@ -136,9 +151,8 @@ This model achieved modest perfomance in terms of the metrics of interest, and p
 * TBD
 * TBD
 6. Inference Pipeline
-7. Stacking??
 
-The models that were implemented as part of this challenge are:
+
 
 
 
