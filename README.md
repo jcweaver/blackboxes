@@ -40,10 +40,12 @@ For this project the team performed the following tasks
 
 1. **Getting ready for Project 4!**
 - Files used in Project 4 - go through the files that are used in Project 4.  
-  * training.csv - Train file
-  * test.csv - TBD
-  * IdlookupTable.csv - TBD
-  * SampleSubmission - TBD
+  * training.csv - list of training 7049 images. Each row contains the (x,y) coordinates for 15 keypoints, and image data as row-ordered list of pixels.
+  * test.csv - list of 1783 test images. Each row contains ImageId and image data as row-ordered list of pixels
+  * IdlookupTable.csv - list of 27124 keypoints Each row contains RowId, ImageId, FeatureName, Location
+  * SampleSubmission - list of 27124 keypoints to predict. Each row contains a RowId, ImageId, FeatureName, Location.
+
+ 
 
 2. **EDA**
 
