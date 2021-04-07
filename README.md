@@ -146,22 +146,52 @@ The best performing model plot can be see below:
 
 4.2.2 **Model 2 (JCW)**
 
+This model was based upon a blog post originally written in Japanese and I followed the Google Translate English version. The English translated title is ["Implement Kaggle Facial Keypoints Detection in Keras"](https://elix-tech.github.io/ja/2016/06/02/kaggle-facial-keypoints-ja.html#conv).
+
+The model follows the suggested approach, taking a 4D input dataset (1, 96, 96, 1) and has 3 x 2D convolution layers with 32-64-128 filters (doubles each layer). Each convolutional layer is followed by a 2x2 max-pooling layer and there are 2 fully-connected layers. The densely-connected layers have 512 units each. The model uses rectified linear unit (‘ReLU’) activation in each layer, an Adam optimization with a learning rate of 0.001, and a lss using mean squared error.
+
+I tried a few other approaches beyond the base model I described above.
+
+Approach 1: Adding BatchNormalization layers to my model
+This did appeared to make all of the result worse
+
+Approach 2: Setting the use_bias parameter in Conv2D to False
+There was some success with this but it didn't reach a new high score
+
+Approach 3: Combining 1 & 2
+This made predictions worse
+
+Approach 4: Appending flipped images to the data
+This appeared to make predictions better and received a new high score.
+
+Approach 5: Brightening all the data
+This appeared to make predictions worse
+
+Approach 6: Brightening the data with flipped data appended
+There was some success with this but it didn't reach a new high score
+
+Approach 7: Appending the data with flipped images and brightened images
+
+Approach 8: Run a model on data that has all 8 keypoints and output a model that only predicts 8 keypoints. Use this model to make predictions for all of the test cases that only require 8 keypoints and then fill in the missing data for the remaining test cases from a prior predictions file.
+
+The best score this model achieved was when it was run using the training data with the flipped version of the training data appended. The training data file for this was with the set "clean_wo_dups", which was removing all duplicates, overlap outliers, and the worst outliers, which are the 4 mislabelled images and 4 worst images (two collages which are duplicates and two cartoons). This had a Kaggle score of 3.65.
+
+The best overall score was running a model on data that had all 8 keypoints and outputing only 8 predictions then using data from another predictions file for the remaining test cases that required more than 8 keypoints. This model had a score of 3.40 on Kaggle.
+
+
 4.2.4 **Model 3 (SP)**
 
 This model was based upon a blog post entitled ["Achieving Top 23% in Kaggle's Facial Keypoints Detection with Keras + Tensorflow"](https://fairyonice.github.io/achieving-top-23-in-kaggles-facial-keypoints-detection-with-keras-tensorflow.html), by Shinya Yuki, which itself is an adaptation of [Daniel Nouri's approach](https://danielnouri.org/notes/2014/12/17/using-convolutional-neural-nets-to-detect-facial-keypoints-tutorial/) to this challenge using the now deprecated Lasagne package for CNN's. The original package was released prior to the release of the Keras library, so Yuki's version represents an update. The model was adapted to take data that had been pre-processed using our EDA and data cleaning pipeline. 
 
 The model is essentially the same, taking a 4D input dataset (1, 96, 96, 1) and has 3 x 2D convolution layers with 32-64-128 filters (doubles each layer). Each convolutional layer is followed by a 2x2 max-pooling layer and there are 2 fully-connected layers. The densely-connected layers have 500 units each. The model uses rectified linear unit (‘ReLU’) activation in each layer, a Nesterov-accelerated gradient descent (SGD) optimizer with a learning rate of 0.01 and a momentum parameter of 0.9. The model was trained using batches of 128 examples, and for 300 epochs. The only way the model was modified from the examples was that for simplicity, the dropout layer functionality was omitted.
 
-This model achieved modest perfomance in terms of the metrics of interest, and performed best using the cleaned dataset with overlapping outliers (Kaggle score 4.15) and the cleaned dataset with duplicates (Kaggle score 4.33), which is ~150th position on the leaderboard. Augmented data did not improve its performance past the scores listed. 
+This model achieved modest performance in terms of the metrics of interest, and performed best using the cleaned dataset with overlapping outliers (Kaggle score 4.15) and the cleaned dataset with duplicates (Kaggle score 4.33), which is ~150th position on the leaderboard. Augmented data did not improve its performance past the scores listed. 
 
 The model plot can be seen below:
 
 ![](https://github.com/jcweaver/blackboxes/blob/master/images/Model%20SP/model_flow.png)
 
-* TBD
-* TBD
-* TBD
-* TBD
+
 6. Inference Pipeline
 
 
