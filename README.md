@@ -108,9 +108,9 @@ Note: Each notebook above contains output after each cell making the files quite
 
 |Model (No Output)| Description |
 |:----------------|:------------|
-|[`models/Lenet5_Model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models_no_output/Lenet5_Model.ipynb)|A notebook of models inspired by Lenet5.|
-|[`models/JCW.Model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models_no_output/JCW_Model.ipynb)|Joanie to fill in.|
-|[`models/SP_model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models_no_output/SP_model.ipynb)|A notebook of a model inspired by Daniel Nouri's approach to this challenge.|
+|[`models_no_output/Lenet5_Model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models_no_output/Lenet5_Model.ipynb)|A notebook of models inspired by Lenet5.|
+|[`models_no_output/JCW.Model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models_no_output/JCW_Model.ipynb)|Joanie to fill in.|
+|[`models_no_output/SP_model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models_no_output/SP_model.ipynb)|A notebook of a model inspired by Daniel Nouri's approach to this challenge.|
 
 
 
