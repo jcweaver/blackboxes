@@ -146,6 +146,10 @@ The model is essentially the same, taking a 4D input dataset (1, 96, 96, 1) and 
 
 This model achieved modest perfomance in terms of the metrics of interest, and performed best using the cleaned dataset with overlapping outliers (Kaggle score 4.15) and the cleaned dataset with duplicates (Kaggle score 4.33), which is ~150th position on the leaderboard. Augmented data did not improve its performance past the scores listed. 
 
+The model plot can be seen below:
+
+![](https://github.com/jcweaver/blackboxes/blob/master/images/Model%20SP/model_flow.png)
+
 * TBD
 * TBD
 * TBD
