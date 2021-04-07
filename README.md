@@ -178,6 +178,8 @@ The best score this model achieved was when it was run using the training data w
 
 The best overall score was running a model on data that had all 8 keypoints and outputing only 8 predictions then using data from another predictions file for the remaining test cases that required more than 8 keypoints. This model had a score of 3.40 on Kaggle.
 
+The base model plot is below:
+![](https://github.com/jcweaver/blackboxes/blob/master/images/clean_wo_dups_jcw_layerplot.png)
 
 4.2.4 **Model 3 (SP)**
 
