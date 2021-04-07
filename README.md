@@ -195,6 +195,7 @@ The model plot can be seen below:
 
 
 5. **Transformations**
+
 To try to improve our models, we developed a few transformations. These are in the utils/transform.py file and their effects on images are displayed in the EDA/EDA_Final file.
 
 * HorizontalFlip : This function applies a horizontal flip to the images and properly adjusts the new keypoint positions.
