@@ -102,7 +102,7 @@ The models that were implemented as part of this challenge are:
 |:----|:------------|
 |[`models/Lenet5_Model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models/Lenet5_Model.ipynb)|A notebook of models inspired by Lenet5.|
 |[`models/JCW.Model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models/JCW_Model.ipynb)|Joanie to fill in.|
-|[`models/SP_model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models/SP_model.ipynb)|Sandip to fill in.|
+|[`models/SP_model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models/SP_model.ipynb)|A notebook of a model inspired by Daniel Nouri's approach to this challenge.|
 
 
 
