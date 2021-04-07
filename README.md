@@ -101,7 +101,7 @@ The models that were implemented as part of this challenge are:
 |Model| Description |
 |:----|:------------|
 |[`models/Lenet5_Model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models/Lenet5_Model.ipynb)|A notebook of models inspired by Lenet5.|
-|[`models/JCW.Model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models/JCW_Model.ipynb)|Joanie to fill in.|
+|[`models/JCW.Model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models/JCW_Model.ipynb)|A notebook of a model inspired by Sinya Yuki's approach.|
 |[`models/SP_model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models/SP_model.ipynb)|A notebook of a model inspired by Daniel Nouri's approach to this challenge.|
 
 Note: Each notebook above contains output after each cell making the files quite large. If you'd like to view the model files without output please navigate to:
@@ -109,7 +109,7 @@ Note: Each notebook above contains output after each cell making the files quite
 |Model (No Output)| Description |
 |:----------------|:------------|
 |[`models_no_output/Lenet5_Model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models_no_output/Lenet5_Model.ipynb)|A notebook of models inspired by Lenet5.|
-|[`models_no_output/JCW.Model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models_no_output/JCW_Model.ipynb)|Joanie to fill in.|
+|[`models_no_output/JCW.Model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models_no_output/JCW_Model.ipynb)|A notebook of a model inspired by Sinya Yuki's approach.|
 |[`models_no_output/SP_model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models_no_output/SP_model.ipynb)|A notebook of a model inspired by Daniel Nouri's approach to this challenge.|
 
 
@@ -202,7 +202,19 @@ Here is a visual of these transformations:
 ![](https://github.com/jcweaver/blackboxes/blob/master/images/transformations.png)
 
 
-
+## How to Run one of our models
+To run one of the models, you'll need to take the following steps:
+1. Download the data files from Kaggle and place in the data folder.
+2. Run the EDA/EDA notebook file. This generates initial pickle files of the data which are faster to load.
+3. Run the EDA/Data_Clean notebook file. This cleans the data and generates a variety of clean pickle files for the training data to use.
+4. Choose one of the model notebook files in the models folder to run.
+5. Specify where the utils directory is on your machine.
+6. Specify where the clean training files are on your machine.
+7. Specify where the new model files should be saved if you need to load or reference them later.
+8. Run the model creation block in the model notebook file you have open.
+9. Specify where predictions should be saved.
+10. Run the prediction code block in the model notebook file you have open.
+11. Submit any of the predictions to Kaggle: https://www.kaggle.com/c/facial-keypoints-detection/submit
 
 ## Navigating the Files in this Repository
 
