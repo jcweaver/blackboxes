@@ -104,7 +104,7 @@ The models that were implemented as part of this challenge are:
 |[`models/JCW.Model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models/JCW_Model.ipynb)|A notebook of a model inspired by Sinya Yuki's approach.|
 |[`models/SP_model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models/SP_model.ipynb)|A notebook of a model inspired by Daniel Nouri's approach to this challenge.|
 
-Note: Each notebook above contains output after each cell making the files quite large. If you'd like to view the model files without output please navigate to:
+Note: Each notebook above contains output after each cell making the files quite large. If you'd like to view the model files without output to simple view the code please navigate to:
 
 |Model (No Output)| Description |
 |:----------------|:------------|
