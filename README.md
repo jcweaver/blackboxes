@@ -104,6 +104,14 @@ The models that were implemented as part of this challenge are:
 |[`models/JCW.Model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models/JCW_Model.ipynb)|Joanie to fill in.|
 |[`models/SP_model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models/SP_model.ipynb)|A notebook of a model inspired by Daniel Nouri's approach to this challenge.|
 
+Note: Each notebook above contains output after each cell making the files quite large. If you'd like to view the model files without output please navigate to:
+
+|Model (No Output)| Description |
+|:----------------|:------------|
+|[`models/Lenet5_Model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models_no_output/Lenet5_Model.ipynb)|A notebook of models inspired by Lenet5.|
+|[`models/JCW.Model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models_no_output/JCW_Model.ipynb)|Joanie to fill in.|
+|[`models/SP_model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models_no_output/SP_model.ipynb)|A notebook of a model inspired by Daniel Nouri's approach to this challenge.|
+
 
 
 4.2.1 **Model 1 (JN)/LeNet5 Inspired**
