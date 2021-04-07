@@ -192,9 +192,14 @@ The model plot can be seen below:
 ![](https://github.com/jcweaver/blackboxes/blob/master/images/Model%20SP/model_flow.png)
 
 
-6. Inference Pipeline
+5. **Transformations**
+To try to improve our models, we developed a few transformations. These are in the utils/transform.py file and their effects on images are displayed in the EDA/EDA_Final file.
 
+* HorizontalFlip : This function applies a horizontal flip to the images and properly adjusts the new keypoint positions.
+* Bright/Dim : This function applies brightening or dimming to images.
 
+Here is a visual of these transformations:
+![](https://github.com/jcweaver/blackboxes/blob/master/images/transformations.png)
 
 
 
