@@ -281,28 +281,10 @@ To run one of the models, you'll need to take the following steps:
 │           ├── clean_w_outliers_spPred.csv
 │           └── clean_wo_dups_spPred.csv
 ├── README.md
-├── cleantrain
-│   ├── clean_all_outliers.p
-│   ├── clean_duplicates.p
-│   ├── clean_o_dups.p
-│   ├── clean_o_outliers.p
-│   ├── clean_w_dups.p
-│   ├── clean_w_outliers.p
-│   └── clean_wo_dups.p
 ├── data
 │   ├── IdLookupTable.csv
 │   ├── SampleSubmission.csv
-│   ├── final_check_sum.p
-│   ├── id_lookup.p
 │   ├── kaggle_files.zip
-│   ├── models
-│   │   └── clean_w_dups_sp.h5
-│   ├── test.csv
-│   ├── test.p
-│   ├── testdup.p
-│   ├── train.p
-│   ├── traindup.p
-│   └── training.csv
 ├── deliverables
 │   ├── README.md
 │   └── initial_modelling.pdf
