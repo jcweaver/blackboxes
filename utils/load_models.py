@@ -187,12 +187,18 @@ class LoadTrainModels(object):
     # Inspired by:
     # #Inspired by https://medium.com/@mgazar/lenet-5-in-9-lines-of-code-using-keras-ac99294c8086
     ##################################################################################
-    def __get_model_jn(self,model_name, X, Y, l_batch_size, l_epochs, l_validation_split = .01, l_shuffle = True, layers = 7, verbose = True):
+    def __get_model_jn(self,model_name, X, Y, l_batch_size, l_epochs, l_validation_split = .01, l_shuffle = True, layers = 7, verbose = True, separate = False):
 
         model_file_name = "".join([self.__model_dir, model_name,".h5"])
         model_json_file = "".join([self.__model_dir, model_name,".json"])
         model_plot_name = "".join([self.__model_dir, model_name,"_plot.png"])
         model_layer_plot = "".join([self.__model_dir, model_name,"_layerplot.png"])
+
+
+        #Code for combined model approach
+        num_features = 30
+        if separate:
+            num_features = 8
 
         if verbose:
             print("Looking for model JN")
@@ -217,6 +223,7 @@ class LoadTrainModels(object):
             cp = ModelCheckpoint(filepath = model_file_name, verbose = verbose, save_best_only = True,
                 mode = 'min', monitor = 'val_mae')
 
+
             model = Sequential()
 
             #Add layers
@@ -235,11 +242,11 @@ class LoadTrainModels(object):
             if layers > 3:
                 model.add(Dense(256))
                 model.add(ReLU())
-            if layers > 4:
+            if layers > 4 & separate:
                 model.add(Dense(128))
                 model.add(ReLU())
 
-            model.add(Dense(30))
+            model.add(Dense(num_features))
 
             if verbose:
                 print(model.summary())
@@ -523,23 +530,29 @@ class LoadTrainModels(object):
     # Generic function that prepares and redirects to correct
     #
     ##################################################################################
-    def train_model(self, model_name, train, split=True, X=None, Y=None,hoizontal_flip = False, dim = 0, brightness = 0,layers = 7, verbose = True,separate=False):
+    def train_model(self, model_name, train, split=True, X=None, Y=None,hoizontal_flip = False, aug = False, dim = 1, brightness = 1,layers = 7, verbose = True,separate=False):
 
+        
         data_transform = transform_data.TransformData(verbose=True)
 
-        #train_copy = train.copy()
-
-        #Scale train
-        train_scaled = data_transform.ScaleImages(train, verbose = True)
+        train_copy = train.copy()
 
         #Flip the image if True
         if hoizontal_flip:
-            train_scaled = data_transform.FlipHorizontal(train_scaled, verbose = True)
+            train_copy = data_transform.FlipHorizontal(train_copy, verbose = True)
 
 
         #Bright_Dim(self, train, level_of_brightness = 1.4, level_to_dim = 0.3, verbose = False)
-        train_scaled = data_transform.Bright_Dim(train_scaled, level_of_brightness = brightness, level_to_dim = dim,verbose = verbose)
+        if aug:
+            train_copy = data_transform.Bright_Dim(train_copy, level_of_brightness = brightness, level_to_dim = dim,verbose = verbose)
+    
+        if aug:
+            train_copy = pd.concat([train,train_copy])
 
+        #Scale train
+        train_scaled = data_transform.ScaleImages(train_copy, verbose = True)
+
+        
         #Split train and scale accordingly
         # #do the split here and pass in parameters
         if(split):
@@ -549,7 +562,7 @@ class LoadTrainModels(object):
 
         if "Lenet5" in model_name:
             #Get and compile the model.
-            model, history = self.__get_model_jn(model_name, X = X, Y = Y, l_batch_size = 128, l_epochs = 300, l_shuffle = True,layers=layers)
+            model, history = self.__get_model_jn(model_name, X = X, Y = Y, l_batch_size = 128, l_epochs = 300, l_shuffle = True,layers=layers,separate=separate)
         elif "jcw" in model_name:
             model, history = self.__get_model_jcw(model_name, X = X, Y = Y, l_batch_size = 128, l_epochs = 300, l_shuffle = True,separate=separate)
         elif "sp" in model_name:
