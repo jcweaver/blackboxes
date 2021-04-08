@@ -181,5 +181,18 @@ class PredictModels(object):
         self.__generate_prediction(model_name, Y, test, columns=columns)
         return Y
 
+    def combine_predictions(self, full_path, seperate_path):
+        files = os.listdir(seperate_path)
+        max_row_full = 17592
 
+        for file in files:
+            #separate is from the most recent run of predictions based solely on train data that had 8 keypoints
+            predictions_separate= pd.read_csv(seperate_path+file)
+            #full is the older predictions data that was built on all the train
+            predictions_full = pd.read_csv(full_path+file)
+            new_pred = predictions_separate[predictions_separate['RowId']>max_row_full].copy()
+            new_pred = new_pred.append(predictions_full[predictions_full['RowId']<=max_row_full].copy())
+            new_pred = new_pred.sort_values(by=['RowId'])
+            new_file = ''.join((self.__pred_dir,"combined_",file))
+            new_pred.to_csv(new_file,index=False)
     
