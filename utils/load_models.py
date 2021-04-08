@@ -523,7 +523,7 @@ class LoadTrainModels(object):
     # Generic function that prepares and redirects to correct
     #
     ##################################################################################
-    def train_model(self, model_name, train, split=True, X=None, Y=None,hoizontal_flip = False, dim = 0.3, brightness = 1.4,layers = 7, verbose = True):
+    def train_model(self, model_name, train, split=True, X=None, Y=None,hoizontal_flip = False, dim = 0, brightness = 0,layers = 7, verbose = True,separate=False):
 
         data_transform = transform_data.TransformData(verbose=True)
 
@@ -551,7 +551,7 @@ class LoadTrainModels(object):
             #Get and compile the model.
             model, history = self.__get_model_jn(model_name, X = X, Y = Y, l_batch_size = 128, l_epochs = 300, l_shuffle = True,layers=layers)
         elif "jcw" in model_name:
-            model, history = self.__get_model_jcw(model_name, X = X, Y = Y, l_batch_size = 128, l_epochs = 300, l_shuffle = True)
+            model, history = self.__get_model_jcw(model_name, X = X, Y = Y, l_batch_size = 128, l_epochs = 300, l_shuffle = True,separate=separate)
         elif "sp" in model_name:
             model, history = self.__get_model_sp(model_name, X = X, Y = Y, l_batch_size = 128, l_epochs = 300, l_shuffle = True)
         else:
