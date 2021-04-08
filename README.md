@@ -40,10 +40,12 @@ For this project the team performed the following tasks
 
 1. **Getting ready for Project 4!**
 - Files used in Project 4 - go through the files that are used in Project 4.  
-  * training.csv - Train file
-  * test.csv - TBD
-  * IdlookupTable.csv - TBD
-  * SampleSubmission - TBD
+  * training.csv - list of training 7049 images. Each row contains the (x,y) coordinates for 15 keypoints, and image data as row-ordered list of pixels.
+  * test.csv - list of 1783 test images. Each row contains ImageId and image data as row-ordered list of pixels
+  * IdlookupTable.csv - list of 27124 keypoints Each row contains RowId, ImageId, FeatureName, Location
+  * SampleSubmission - list of 27124 keypoints to predict. Each row contains a RowId, ImageId, FeatureName, Location.
+
+ 
 
 2. **EDA**
 
@@ -101,8 +103,16 @@ The models that were implemented as part of this challenge are:
 |Model| Description |
 |:----|:------------|
 |[`models/Lenet5_Model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models/Lenet5_Model.ipynb)|A notebook of models inspired by Lenet5.|
-|[`models/JCW.Model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models/JCW_Model.ipynb)|Joanie to fill in.|
+|[`models/JCW.Model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models/JCW_Model.ipynb)|A notebook of a model inspired by Sinya Yuki's approach.|
 |[`models/SP_model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models/SP_model.ipynb)|A notebook of a model inspired by Daniel Nouri's approach to this challenge.|
+
+Note: Each notebook above contains output after each cell making the files quite large. If you'd like to view the model files without output to simple view the code please navigate to:
+
+|Model (No Output)| Description |
+|:----------------|:------------|
+|[`models_no_output/Lenet5_Model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models_no_output/Lenet5_Model.ipynb)|A notebook of models inspired by Lenet5.|
+|[`models_no_output/JCW.Model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models_no_output/JCW_Model.ipynb)|A notebook of a model inspired by Sinya Yuki's approach.|
+|[`models_no_output/SP_model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models_no_output/SP_model.ipynb)|A notebook of a model inspired by Daniel Nouri's approach to this challenge.|
 
 
 
@@ -138,30 +148,189 @@ The best performing model plot can be see below:
 
 4.2.2 **Model 2 (JCW)**
 
+This model was based upon a blog post originally written in Japanese and I followed the Google Translate English version. The English translated title is ["Implement Kaggle Facial Keypoints Detection in Keras"](https://elix-tech.github.io/ja/2016/06/02/kaggle-facial-keypoints-ja.html#conv).
+
+The model follows the suggested approach, taking a 4D input dataset (1, 96, 96, 1) and has 3 x 2D convolution layers with 32-64-128 filters (doubles each layer). Each convolutional layer is followed by a 2x2 max-pooling layer and there are 2 fully-connected layers. The densely-connected layers have 512 units each. The model uses rectified linear unit (‘ReLU’) activation in each layer, an Adam optimization with a learning rate of 0.001, and a lss using mean squared error.
+
+I tried a few other approaches beyond the base model I described above.
+
+Approach 1: Adding BatchNormalization layers to my model
+This did appeared to make all of the result worse
+
+Approach 2: Setting the use_bias parameter in Conv2D to False
+There was some success with this but it didn't reach a new high score
+
+Approach 3: Combining 1 & 2
+This made predictions worse
+
+Approach 4: Appending flipped images to the data
+This appeared to make predictions better and received a new high score.
+
+Approach 5: Brightening all the data
+This appeared to make predictions worse
+
+Approach 6: Brightening the data with flipped data appended
+There was some success with this but it didn't reach a new high score
+
+Approach 7: Appending the data with flipped images and brightened images
+
+Approach 8: Run a model on data that has all 8 keypoints and output a model that only predicts 8 keypoints. Use this model to make predictions for all of the test cases that only require 8 keypoints and then fill in the missing data for the remaining test cases from a prior predictions file.
+
+The best score this model achieved was when it was run using the training data with the flipped version of the training data appended. The training data file for this was with the set "clean_wo_dups", which was removing all duplicates, overlap outliers, and the worst outliers, which are the 4 mislabelled images and 4 worst images (two collages which are duplicates and two cartoons). This had a Kaggle score of 3.65.
+
+The best overall score was running a model on data that had all 8 keypoints and outputing only 8 predictions then using data from another predictions file for the remaining test cases that required more than 8 keypoints. This model had a score of 3.40 on Kaggle.
+
+The base model plot is below:
+![](https://github.com/jcweaver/blackboxes/blob/master/images/clean_wo_dups_jcw_layerplot.png)
+
 4.2.4 **Model 3 (SP)**
 
 This model was based upon a blog post entitled ["Achieving Top 23% in Kaggle's Facial Keypoints Detection with Keras + Tensorflow"](https://fairyonice.github.io/achieving-top-23-in-kaggles-facial-keypoints-detection-with-keras-tensorflow.html), by Shinya Yuki, which itself is an adaptation of [Daniel Nouri's approach](https://danielnouri.org/notes/2014/12/17/using-convolutional-neural-nets-to-detect-facial-keypoints-tutorial/) to this challenge using the now deprecated Lasagne package for CNN's. The original package was released prior to the release of the Keras library, so Yuki's version represents an update. The model was adapted to take data that had been pre-processed using our EDA and data cleaning pipeline. 
 
-The model is essentially the same, taking a 4D input dataset (1, 96, 96, 1) and has 3 x 2D convolution layers with 32-64-128 filters (doubles each layer). Each convolutional layer is followed by a 2x2 max-pooling layer and there are 2 fully-connected layers. The densely-connected layers have 500 units each. The model uses rectified linear unit (‘ReLU’) activation in each layer, a Nesterov-accelerated gradient descent (SGD) optimizer with a learning rate of 0.01 and a momentum parameter of 0.9. The model was trained using batches of 128 examples, and for 300 epochs. The only way the model was modified from the examples was that for simplicity, the dropout layer functionality was omitted.
+The model takes a 4D input dataset (1, 96, 96, 1) and has 3 x 2D convolution layers with 32-64-128 filters (doubles each layer). Each convolutional layer is followed by a 2x2 max-pooling layer and there are 2 fully-connected layers. The densely-connected layers have 500 units each. The model uses rectified linear unit (‘ReLU’) activation in each layer, a Nesterov-accelerated gradient descent (SGD) optimizer with a learning rate of 0.01 and a momentum parameter of 0.9. The model was trained using batches of 128 examples, and for 300 epochs. 
 
-This model achieved modest perfomance in terms of the metrics of interest, and performed best using the cleaned dataset with overlapping outliers (Kaggle score 4.15) and the cleaned dataset with duplicates (Kaggle score 4.33), which is ~150th position on the leaderboard. Augmented data did not improve its performance past the scores listed. 
+This model achieved modest performance in terms of the metrics of interest, and performed best using the cleaned dataset with overlapping outliers (Kaggle score 4.15), which is between 140-150th position on the leaderboard. 
+
+In terms of approach, the model and parameters themselves were not changed, but I tested it using various data transformations:
+
+Approach 1: All datasets as they were.</br>
+Approach 2: Flipped images.</br>
+Approach 3: Concatenated original datasets + flipped images (i.e. double size).</br>
+
+The best score was with approach 1, however in positions 2 and 3 were data using the concatenated dataset (approach 3):
+
+![](https://github.com/jcweaver/blackboxes/blob/master/images/Model%20SP/top_3_models.png)
 
 The model plot can be seen below:
 
 ![](https://github.com/jcweaver/blackboxes/blob/master/images/Model%20SP/model_flow.png)
 
-* TBD
-* TBD
-* TBD
-* TBD
-6. Inference Pipeline
+
+5. **Transformations**
+
+To try to improve our models, we developed a few transformations. These are in the utils/transform.py file and their effects on images are displayed in the EDA/EDA_Final file.
+
+* HorizontalFlip : This function applies a horizontal flip to the images and properly adjusts the new keypoint positions.
+* Bright/Dim : This function applies brightening or dimming to images.
+
+Here is a visual of these transformations:
+![](https://github.com/jcweaver/blackboxes/blob/master/images/transformations.png)
 
 
-
-
-
+## How to Run one of our models
+To run one of the models, you'll need to take the following steps:
+1. Download the data files from Kaggle and place in the data folder.
+2. Run the EDA/EDA notebook file. This generates initial pickle files of the data which are faster to load.
+3. Run the EDA/Data_Clean notebook file. This cleans the data and generates a variety of clean pickle files for the training data to use.
+4. Choose one of the model notebook files in the models folder to run.
+5. Specify where the utils directory is on your machine.
+6. Specify where the clean training files are on your machine.
+7. Specify where the new model files should be saved if you need to load or reference them later.
+8. Run the model creation block in the model notebook file you have open.
+9. Specify where predictions should be saved.
+10. Run the prediction code block in the model notebook file you have open.
+11. Submit any of the predictions to Kaggle: https://www.kaggle.com/c/facial-keypoints-detection/submit
 
 ## Navigating the Files in this Repository
+
+**Outline of Repo Structure:**
+```
+├── EDA
+│   ├── Augment_Missing_Data.ipynb
+│   ├── Data_Clean.ipynb
+│   └── EDA_Final.ipynb
+├── Predictions
+│   ├── JCW_Model
+│   │   ├── clean_wo_dups_jcwPred_flipped_append.csv
+│   │   ├── clean_wo_dups_jcwPred_nobatch.csv
+│   │   ├── clean_wo_dups_jcwPred_nobatch_nobias.csv
+│   │   ├── combined_clean_all_outliers_spPred.csv
+│   │   ├── combined_clean_o_dups_Lenet5Pred.csv
+│   │   └── combined_clean_w_outliers_jcwPred.csv
+│   ├── LeNet5
+│   │   ├── clean_all_outliers_Lenet5Pred.csv
+│   │   ├── clean_duplicates_Lenet5Pred.csv
+│   │   ├── clean_o_dups_Lenet5Pred.csv
+│   │   ├── clean_o_outliers_Lenet5Pred.csv
+│   │   ├── clean_w_dups_Lenet5Pred.csv
+│   │   ├── clean_w_outliers_Lenet5Pred.csv
+│   │   └── clean_wo_dups_Lenet5Pred.csv
+│   └── SP_Model
+│       ├── concatenated
+│       │   ├── clean_all_outliers_spPred.csv
+│       │   ├── clean_duplicates_spPred.csv
+│       │   ├── clean_o_dups_spPred.csv
+│       │   ├── clean_o_outliers_spPred.csv
+│       │   ├── clean_w_dups_spPred.csv
+│       │   ├── clean_w_outliers_spPred.csv
+│       │   └── clean_wo_dups_spPred.csv
+│       ├── flipped_only
+│       │   ├── clean_all_outliers_spPred.csv
+│       │   ├── clean_duplicates_spPred.csv
+│       │   ├── clean_o_dups_spPred.csv
+│       │   ├── clean_o_outliers_spPred.csv
+│       │   ├── clean_w_dups_spPred.csv
+│       │   ├── clean_w_outliers_spPred.csv
+│       │   └── clean_wo_dups_spPred.csv
+│       └── raw_datasets
+│           ├── clean_all_outliers_spPred.csv
+│           ├── clean_duplicates_spPred.csv
+│           ├── clean_o_dups_spPred.csv
+│           ├── clean_o_outliers_spPred.csv
+│           ├── clean_w_dups_spPred.csv
+│           ├── clean_w_outliers_spPred.csv
+│           └── clean_wo_dups_spPred.csv
+├── README.md
+├── data
+│   ├── IdLookupTable.csv
+│   ├── SampleSubmission.csv
+│   ├── kaggle_files.zip
+├── deliverables
+│   ├── README.md
+│   └── initial_modelling.pdf
+├── images
+│   ├── Lenet5\ Results
+│   │   ├── Lenet_flow.png
+│   │   ├── all_clean_output.jpg
+│   │   ├── all_outliers.jpg
+│   │   ├── aug_clean_all_outliers.jpg
+│   │   ├── best_score.jpg
+│   │   ├── duplicates.jpg
+│   │   ├── layer_bd_score.jpg
+│   │   ├── layer_hf_output.jpg
+│   │   ├── layers_output.jpg
+│   │   ├── layers_score.jpg
+│   │   ├── o_duplicates.jpg
+│   │   ├── o_outliers.jpg
+│   │   ├── raw_model_output.jpg
+│   │   ├── raw_submission.jpg
+│   │   ├── top_three_results.jpg
+│   │   ├── w_duplicates.jpg
+│   │   ├── w_outliers.jpg
+│   │   ├── w_outliers2.jpg
+│   │   └── wo_duplicates.jpg
+│   ├── Model\ SP
+│   │   ├── model_flow.png
+│   │   └── top_3_models.png
+│   ├── all_clean_files.jpg
+│   ├── clean_wo_dups_jcw_layerplot.png
+│   └── transformations.png
+├── models
+│   ├── JCW_Model.ipynb
+│   ├── Lenet5_Model.ipynb
+│   ├── SP_model.ipynb
+│   └── initial_models.ipynb
+├── models_no_output
+│   ├── JCW_Model.ipynb
+│   ├── Lenet5_Model.ipynb
+│   ├── SP_model.ipynb
+│   └── initial_models.ipynb
+└── utils
+    ├── load_models.py
+    ├── predict_models.py
+    └── transform_data.py
+    
+```
 
 Below is a list of files found in this repository along with a brief description.
 

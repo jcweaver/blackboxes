@@ -35,7 +35,7 @@ def get_GPU_count():
 
 #######################################################################################
 # LoadTrainModels class
-# 
+#
 # This class loads and trains models
 # It contains the following:
 # Private functions:
@@ -49,7 +49,7 @@ def get_GPU_count():
 #
 # Public functions:
 # print_paths - print the paths set for data files
-# train_model - generic function that prepares and redirects to correct 
+# train_model - generic function that prepares and redirects to correct
 # private function for a model
 # train_sp - specific function that prepares and redirects to __get_model_sp
 #
@@ -163,7 +163,7 @@ class LoadTrainModels(object):
         plt.close()
 
     ##################################################################################
-    # __plot_history 
+    # __plot_history
     # Plot out results from model
     #
     ##################################################################################
@@ -181,18 +181,24 @@ class LoadTrainModels(object):
         plt.show()
 
     ##################################################################################
-    # get_model_jn - 
+    # get_model_jn -
     # Model written by Jackie based on Lenet5
     #
     # Inspired by:
     # #Inspired by https://medium.com/@mgazar/lenet-5-in-9-lines-of-code-using-keras-ac99294c8086
     ##################################################################################
-    def __get_model_jn(self,model_name, X, Y, l_batch_size, l_epochs, l_validation_split = .01, l_shuffle = True, layers = 7, verbose = True):
-        
+    def __get_model_jn(self,model_name, X, Y, l_batch_size, l_epochs, l_validation_split = .01, l_shuffle = True, layers = 7, verbose = True, separate = False):
+
         model_file_name = "".join([self.__model_dir, model_name,".h5"])
         model_json_file = "".join([self.__model_dir, model_name,".json"])
         model_plot_name = "".join([self.__model_dir, model_name,"_plot.png"])
         model_layer_plot = "".join([self.__model_dir, model_name,"_layerplot.png"])
+
+
+        #Code for combined model approach
+        num_features = 30
+        if separate:
+            num_features = 8
 
         if verbose:
             print("Looking for model JN")
@@ -217,6 +223,7 @@ class LoadTrainModels(object):
             cp = ModelCheckpoint(filepath = model_file_name, verbose = verbose, save_best_only = True,
                 mode = 'min', monitor = 'val_mae')
 
+
             model = Sequential()
 
             #Add layers
@@ -235,11 +242,11 @@ class LoadTrainModels(object):
             if layers > 3:
                 model.add(Dense(256))
                 model.add(ReLU())
-            if layers > 4:
+            if layers > 4 & separate:
                 model.add(Dense(128))
                 model.add(ReLU())
 
-            model.add(Dense(30))
+            model.add(Dense(num_features))
 
             if verbose:
                 print(model.summary())
@@ -262,7 +269,7 @@ class LoadTrainModels(object):
 
             batch_size = l_batch_size * GPU_count
             print("Batch size:", batch_size)
-            
+
             history = compliled_model.fit(X, Y, validation_split = l_validation_split, batch_size = l_batch_size * GPU_count, epochs = l_epochs, shuffle = l_shuffle, callbacks = [es, cp], verbose = verbose)
 
             if verbose:
@@ -293,8 +300,8 @@ class LoadTrainModels(object):
 
 
     ##################################################################################
-    # __get_model_jcw                               
-    # Build the model created by JCW                                                      
+    # __get_model_jcw
+    # Build the model created by JCW
     # Inspired by: https://elix-tech.github.io/ja/2016/06/02/kaggle-facial-keypoints-ja.html#conv
     # For more details, refer to models/JCW_Model
     ##################################################################################
@@ -304,12 +311,12 @@ class LoadTrainModels(object):
         model_json_file = "".join([self.__model_dir, model_name,".json"])
         model_plot_name = "".join([self.__model_dir, model_name,"_plot.png"])
         model_layer_plot = "".join([self.__model_dir, model_name,"_layerplot.png"])
-        
+
         #Code for combined model approach
         num_features = 30
         if separate:
             num_features = 8
-        
+
         if verbose:
             print("Looking for model JW")
 
@@ -364,9 +371,9 @@ class LoadTrainModels(object):
                 print(model.summary())
 
             compiled_model = model
-            
+
             plot_model(model, to_file=model_layer_plot, show_shapes=True, show_layer_names=True)
-        
+
             #play with these numbers.....
             #https://keras.io/api/models/model_training_apis/
             compiled_model.compile(optimizer = act, loss = lss, metrics = mtrc)
@@ -391,7 +398,7 @@ class LoadTrainModels(object):
                 json_file.write(model_json)
 
             #Plotting history
-            if verbose: 
+            if verbose:
                 self.__plot_history(history)
 
             if verbose:
@@ -405,8 +412,8 @@ class LoadTrainModels(object):
         return model, history
 
     ##################################################################################
-    # __get_model_sp                               
-    # Build the model created by SP                                                     
+    # __get_model_sp
+    # Build the model created by SP
     #
     ##################################################################################
     def __get_model_sp(self,model_name, X, Y, l_batch_size, l_epochs, l_validation_split = .2, x_val = None, y_val = None, l_shuffle = True, verbose = True, separate = False):
@@ -471,7 +478,7 @@ class LoadTrainModels(object):
                 print(model.summary())
 
             compiled_model = model
-            
+
             plot_model(model, to_file=model_layer_plot, show_shapes=True, show_layer_names=True)
 
             compiled_model.compile(optimizer = sgd, loss = lss, metrics = mtrc)
@@ -490,7 +497,7 @@ class LoadTrainModels(object):
             with open(model_json_file, "w") as json_file:
                 json_file.write(model_json)
 
-            if verbose: 
+            if verbose:
                 #Plotting history
                 self.__plot_history(history)
 
@@ -508,10 +515,10 @@ class LoadTrainModels(object):
 
 
     ############################# PUBLIC FUNCTIONS #################################################
-    
+
     ##################################################################################
-    # print_paths                              
-    # Print the paths set for data files                                                     
+    # print_paths
+    # Print the paths set for data files
     #
     ##################################################################################
     def print_paths(self):
@@ -523,23 +530,29 @@ class LoadTrainModels(object):
     # Generic function that prepares and redirects to correct
     #
     ##################################################################################
-    def train_model(self, model_name, train, split=True, X=None, Y=None,hoizontal_flip = False, dim = 0.3, brightness = 1.4,layers = 7, verbose = True):
+    def train_model(self, model_name, train, split=True, X=None, Y=None,hoizontal_flip = False, aug = False, dim = 1, brightness = 1,layers = 7, verbose = True,separate=False):
 
+        
         data_transform = transform_data.TransformData(verbose=True)
 
-        #train_copy = train.copy()
-
-        #Scale train
-        train_scaled = data_transform.ScaleImages(train, verbose = True)
+        train_copy = train.copy()
 
         #Flip the image if True
         if hoizontal_flip:
-            train_scaled = data_transform.FlipHorizontal(train_scaled, verbose = True)
+            train_copy = data_transform.FlipHorizontal(train_copy, verbose = True)
 
 
         #Bright_Dim(self, train, level_of_brightness = 1.4, level_to_dim = 0.3, verbose = False)
-        train_scaled = data_transform.Bright_Dim(train_scaled, level_of_brightness = brightness, level_to_dim = dim,verbose = verbose)
+        if aug:
+            train_copy = data_transform.Bright_Dim(train_copy, level_of_brightness = brightness, level_to_dim = dim,verbose = verbose)
+    
+        if aug:
+            train_copy = pd.concat([train,train_copy])
 
+        #Scale train
+        train_scaled = data_transform.ScaleImages(train_copy, verbose = True)
+
+        
         #Split train and scale accordingly
         # #do the split here and pass in parameters
         if(split):
@@ -549,43 +562,13 @@ class LoadTrainModels(object):
 
         if "Lenet5" in model_name:
             #Get and compile the model.
-            model, history = self.__get_model_jn(model_name, X = X, Y = Y, l_batch_size = 128, l_epochs = 300, l_shuffle = True,layers=layers)
+            model, history = self.__get_model_jn(model_name, X = X, Y = Y, l_batch_size = 128, l_epochs = 300, l_shuffle = True,layers=layers,separate=separate)
         elif "jcw" in model_name:
-            model, history = self.__get_model_jcw(model_name, X = X, Y = Y, l_batch_size = 128, l_epochs = 300, l_shuffle = True)
+            model, history = self.__get_model_jcw(model_name, X = X, Y = Y, l_batch_size = 128, l_epochs = 300, l_shuffle = True,separate=separate)
         elif "sp" in model_name:
             model, history = self.__get_model_sp(model_name, X = X, Y = Y, l_batch_size = 128, l_epochs = 300, l_shuffle = True)
         else:
             raise RuntimeError("Incorrect model name. Please verify and try again." )
         return model, history
 
-    ##################################################################################
-    # train_sp
-    # Specific function that prepares and redirects to __get_model_sp
-    #
-    ##################################################################################
-    def train_sp(self, model_name, train, split=True, X=None, Y=None, verbose=True, separate = False):
-        if separate :
-            #Only use some of the train
-            train_cols = ['left_eye_center_x', 'left_eye_center_y', 'right_eye_center_x', 'right_eye_center_y',
-                          'nose_tip_x', 'nose_tip_y', 'mouth_center_bottom_lip_x', 'mouth_center_bottom_lip_y',
-                          'image']
-            train = train[train_cols].copy()
-
-        data_transform = transform_data.TransformData(verbose=True)
-        #Scale train
-        train_scaled = data_transform.ScaleImages(train, verbose = True)
-
-        #Split train and scale accordingly
-        # #do the split here and pass in parameters
-        if(split):
-            X, Y = data_transform.SplitTrain(train_scaled)
-        elif X is None | Y is None:
-            raise RuntimeError(f"When Split is set to False, X and Y must be supplied." )
-
-        # Need to reshape X for my model to work
-        X_reshape = X.reshape(-1, 96, 96, 1)
-
-        #Get and compile the model.
-        model, history = self.__get_model_sp(model_name, X = X_reshape, Y = Y, l_batch_size = 128, l_epochs = 300, l_shuffle = True, separate = separate)
-
-        return model, history
+    
