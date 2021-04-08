@@ -233,6 +233,121 @@ To run one of the models, you'll need to take the following steps:
 
 ## Navigating the Files in this Repository
 
+**Outline of Repo Structure**
+`
+├── EDA
+│   ├── Augment_Missing_Data.ipynb
+│   ├── Data_Clean.ipynb
+│   └── EDA_Final.ipynb
+├── Predictions
+│   ├── JCW_Model
+│   │   ├── clean_wo_dups_jcwPred_flipped_append.csv
+│   │   ├── clean_wo_dups_jcwPred_nobatch.csv
+│   │   ├── clean_wo_dups_jcwPred_nobatch_nobias.csv
+│   │   ├── combined_clean_all_outliers_spPred.csv
+│   │   ├── combined_clean_o_dups_Lenet5Pred.csv
+│   │   └── combined_clean_w_outliers_jcwPred.csv
+│   ├── LeNet5
+│   │   ├── clean_all_outliers_Lenet5Pred.csv
+│   │   ├── clean_duplicates_Lenet5Pred.csv
+│   │   ├── clean_o_dups_Lenet5Pred.csv
+│   │   ├── clean_o_outliers_Lenet5Pred.csv
+│   │   ├── clean_w_dups_Lenet5Pred.csv
+│   │   ├── clean_w_outliers_Lenet5Pred.csv
+│   │   └── clean_wo_dups_Lenet5Pred.csv
+│   └── SP_Model
+│       ├── concatenated
+│       │   ├── clean_all_outliers_spPred.csv
+│       │   ├── clean_duplicates_spPred.csv
+│       │   ├── clean_o_dups_spPred.csv
+│       │   ├── clean_o_outliers_spPred.csv
+│       │   ├── clean_w_dups_spPred.csv
+│       │   ├── clean_w_outliers_spPred.csv
+│       │   └── clean_wo_dups_spPred.csv
+│       ├── flipped_only
+│       │   ├── clean_all_outliers_spPred.csv
+│       │   ├── clean_duplicates_spPred.csv
+│       │   ├── clean_o_dups_spPred.csv
+│       │   ├── clean_o_outliers_spPred.csv
+│       │   ├── clean_w_dups_spPred.csv
+│       │   ├── clean_w_outliers_spPred.csv
+│       │   └── clean_wo_dups_spPred.csv
+│       └── raw_datasets
+│           ├── clean_all_outliers_spPred.csv
+│           ├── clean_duplicates_spPred.csv
+│           ├── clean_o_dups_spPred.csv
+│           ├── clean_o_outliers_spPred.csv
+│           ├── clean_w_dups_spPred.csv
+│           ├── clean_w_outliers_spPred.csv
+│           └── clean_wo_dups_spPred.csv
+├── README.md
+├── cleantrain
+│   ├── clean_all_outliers.p
+│   ├── clean_duplicates.p
+│   ├── clean_o_dups.p
+│   ├── clean_o_outliers.p
+│   ├── clean_w_dups.p
+│   ├── clean_w_outliers.p
+│   └── clean_wo_dups.p
+├── data
+│   ├── IdLookupTable.csv
+│   ├── SampleSubmission.csv
+│   ├── final_check_sum.p
+│   ├── id_lookup.p
+│   ├── kaggle_files.zip
+│   ├── models
+│   │   └── clean_w_dups_sp.h5
+│   ├── test.csv
+│   ├── test.p
+│   ├── testdup.p
+│   ├── train.p
+│   ├── traindup.p
+│   └── training.csv
+├── deliverables
+│   ├── README.md
+│   └── initial_modelling.pdf
+├── images
+│   ├── Lenet5\ Results
+│   │   ├── Lenet_flow.png
+│   │   ├── all_clean_output.jpg
+│   │   ├── all_outliers.jpg
+│   │   ├── aug_clean_all_outliers.jpg
+│   │   ├── best_score.jpg
+│   │   ├── duplicates.jpg
+│   │   ├── layer_bd_score.jpg
+│   │   ├── layer_hf_output.jpg
+│   │   ├── layers_output.jpg
+│   │   ├── layers_score.jpg
+│   │   ├── o_duplicates.jpg
+│   │   ├── o_outliers.jpg
+│   │   ├── raw_model_output.jpg
+│   │   ├── raw_submission.jpg
+│   │   ├── top_three_results.jpg
+│   │   ├── w_duplicates.jpg
+│   │   ├── w_outliers.jpg
+│   │   ├── w_outliers2.jpg
+│   │   └── wo_duplicates.jpg
+│   ├── Model\ SP
+│   │   ├── model_flow.png
+│   │   └── top_3_models.png
+│   ├── all_clean_files.jpg
+│   ├── clean_wo_dups_jcw_layerplot.png
+│   └── transformations.png
+├── models
+│   ├── JCW_Model.ipynb
+│   ├── Lenet5_Model.ipynb
+│   ├── SP_model.ipynb
+│   └── initial_models.ipynb
+├── models_no_output
+│   ├── JCW_Model.ipynb
+│   ├── Lenet5_Model.ipynb
+│   ├── SP_model.ipynb
+│   └── initial_models.ipynb
+└── utils
+    ├── load_models.py
+    ├── predict_models.py
+    └── transform_data.py`
+
 Below is a list of files found in this repository along with a brief description.
 
 |File | Description |
