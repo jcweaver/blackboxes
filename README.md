@@ -233,7 +233,7 @@ To run one of the models, you'll need to take the following steps:
 
 ## Navigating the Files in this Repository
 
-**Outline of Repo Structure**
+**Outline of Repo Structure:**
 ```
 ├── EDA
 │   ├── Augment_Missing_Data.ipynb
