@@ -234,7 +234,7 @@ To run one of the models, you'll need to take the following steps:
 ## Navigating the Files in this Repository
 
 **Outline of Repo Structure**
-`
+```
 ├── EDA
 │   ├── Augment_Missing_Data.ipynb
 │   ├── Data_Clean.ipynb
@@ -346,7 +346,9 @@ To run one of the models, you'll need to take the following steps:
 └── utils
     ├── load_models.py
     ├── predict_models.py
-    └── transform_data.py`
+    └── transform_data.py
+    
+```
 
 Below is a list of files found in this repository along with a brief description.
 
