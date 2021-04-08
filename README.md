@@ -191,6 +191,16 @@ The model is essentially the same, taking a 4D input dataset (1, 96, 96, 1) and 
 
 This model achieved modest performance in terms of the metrics of interest, and performed best using the cleaned dataset with overlapping outliers (Kaggle score 4.15) and the cleaned dataset with duplicates (Kaggle score 4.33), which is ~150th position on the leaderboard. Augmented data did not improve its performance past the scores listed. 
 
+In terms of approach, the model and parameters themselves were not changed, but I utilized various data transformations:
+
+1. All datasets as they were.
+2. Flipped images.
+3. Concatenated original datasets + flipped images (i.e. double size).
+
+The best score was with approach 1, however in positions 2 and 3 were data using flipped training images:
+
+![](https://github.com/jcweaver/blackboxes/blob/master/images/Model%20SP/top_3_models.png)
+
 The model plot can be seen below:
 
 ![](https://github.com/jcweaver/blackboxes/blob/master/images/Model%20SP/model_flow.png)
