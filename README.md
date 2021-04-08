@@ -187,15 +187,15 @@ The base model plot is below:
 
 This model was based upon a blog post entitled ["Achieving Top 23% in Kaggle's Facial Keypoints Detection with Keras + Tensorflow"](https://fairyonice.github.io/achieving-top-23-in-kaggles-facial-keypoints-detection-with-keras-tensorflow.html), by Shinya Yuki, which itself is an adaptation of [Daniel Nouri's approach](https://danielnouri.org/notes/2014/12/17/using-convolutional-neural-nets-to-detect-facial-keypoints-tutorial/) to this challenge using the now deprecated Lasagne package for CNN's. The original package was released prior to the release of the Keras library, so Yuki's version represents an update. The model was adapted to take data that had been pre-processed using our EDA and data cleaning pipeline. 
 
-The model is essentially the same, taking a 4D input dataset (1, 96, 96, 1) and has 3 x 2D convolution layers with 32-64-128 filters (doubles each layer). Each convolutional layer is followed by a 2x2 max-pooling layer and there are 2 fully-connected layers. The densely-connected layers have 500 units each. The model uses rectified linear unit (‘ReLU’) activation in each layer, a Nesterov-accelerated gradient descent (SGD) optimizer with a learning rate of 0.01 and a momentum parameter of 0.9. The model was trained using batches of 128 examples, and for 300 epochs. The only way the model was modified from the examples was that for simplicity, the dropout layer functionality was omitted.
+The model takes a 4D input dataset (1, 96, 96, 1) and has 3 x 2D convolution layers with 32-64-128 filters (doubles each layer). Each convolutional layer is followed by a 2x2 max-pooling layer and there are 2 fully-connected layers. The densely-connected layers have 500 units each. The model uses rectified linear unit (‘ReLU’) activation in each layer, a Nesterov-accelerated gradient descent (SGD) optimizer with a learning rate of 0.01 and a momentum parameter of 0.9. The model was trained using batches of 128 examples, and for 300 epochs. 
 
-This model achieved modest performance in terms of the metrics of interest, and performed best using the cleaned dataset with overlapping outliers (Kaggle score 4.15) and the cleaned dataset with duplicates (Kaggle score 4.33), which is ~150th position on the leaderboard. Augmented data did not improve its performance past the scores listed. 
+This model achieved modest performance in terms of the metrics of interest, and performed best using the cleaned dataset with overlapping outliers (Kaggle score 4.15), which is between 140-150th position on the leaderboard. 
 
-In terms of approach, the model and parameters themselves were not changed, but I utilized various data transformations:
+In terms of approach, the model and parameters themselves were not changed, but I tested it using various data transformations:
 
-1. All datasets as they were.
-2. Flipped images.
-3. Concatenated original datasets + flipped images (i.e. double size).
+Approach 1: All datasets as they were.
+Approach 2: Flipped images.
+Approach 3: Concatenated original datasets + flipped images (i.e. double size).
 
 The best score was with approach 1, however in positions 2 and 3 were data using the concatenated dataset (approach 3):
 
