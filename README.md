@@ -98,6 +98,21 @@ The notebook for the baseline models can be found [`here`](https://github.com/jc
 
 4.2 **Final Models**
 
+For our final models we applied two different approaches for preparing the data. 
+
+The first approach simply uses all 30 keypoints, vairious versions of clean data, applies any augmentation, then creates, trains and fits a model before predictions are completed and saved to a CSV file. 
+
+![](https://i.imgur.com/jlxPolW.png)
+
+The second approach involves using all 30 keypoints in the same fashion as above, but also doing the same for 8 keypoints. The predictions from the 30 keypoints and the 8 keypoints are then combined into a single prediction CSV per clean train file . For example, if you run this process on the 7 train pickle files, you will have 
+
+- 7 prediction CSV files (1 for each pickle file) for the 30 keypoints
+- 7 prediction CSV files (1 for each pickle file) for the 8 keypoints
+
+These prediction files are then combined resulting in 7 combined CSV files
+
+![](https://i.imgur.com/1UUDUSy.jpg)
+
 The models that were implemented as part of this challenge are:
 
 |Model| Description |
