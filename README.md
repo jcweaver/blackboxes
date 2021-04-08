@@ -193,9 +193,9 @@ This model achieved modest performance in terms of the metrics of interest, and 
 
 In terms of approach, the model and parameters themselves were not changed, but I tested it using various data transformations:
 
-Approach 1: All datasets as they were.
-Approach 2: Flipped images.
-Approach 3: Concatenated original datasets + flipped images (i.e. double size).
+Approach 1: All datasets as they were.</br>
+Approach 2: Flipped images.</br>
+Approach 3: Concatenated original datasets + flipped images (i.e. double size).</br>
 
 The best score was with approach 1, however in positions 2 and 3 were data using the concatenated dataset (approach 3):
 
