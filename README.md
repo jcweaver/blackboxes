@@ -30,10 +30,10 @@ The Kaggle facial detection challenge asks participants to identify the (x,y) co
 
 ### Performance
 
-This solution acheives a best score of **3.23581** using the Lenet5 inspired model, which places 72 place on the locked leaderboard. 
+This solution acheives a best score of **2.48797** using the Lenet5 inspired model, which places 51 place on the locked leaderboard. 
 
 ## Project Approach
-To reach the final output of the project and to support the summary findings above, TBD
+To reach the final output of the project and to support the summary findings above, we decided to each work on a model that inspired us.  A framework was developed to make creating models and predictions easier for the team. 
 
 ### Completed Tasks
 
@@ -252,101 +252,117 @@ To run one of the models, you'll need to take the following steps:
 
 **Outline of Repo Structure:**
 ```
+.
 ├── EDA
-│   ├── Augment_Missing_Data.ipynb
-│   ├── Data_Clean.ipynb
-│   └── EDA_Final.ipynb
+│   ├── Augment_Missing_Data.ipynb
+│   ├── Data_Clean.ipynb
+│   └── EDA_Final.ipynb
 ├── Predictions
-│   ├── JCW_Model
-│   │   ├── clean_wo_dups_jcwPred_flipped_append.csv
-│   │   ├── clean_wo_dups_jcwPred_nobatch.csv
-│   │   ├── clean_wo_dups_jcwPred_nobatch_nobias.csv
-│   │   ├── combined_clean_all_outliers_spPred.csv
-│   │   ├── combined_clean_o_dups_Lenet5Pred.csv
-│   │   └── combined_clean_w_outliers_jcwPred.csv
-│   ├── LeNet5
-│   │   ├── clean_all_outliers_Lenet5Pred.csv
-│   │   ├── clean_duplicates_Lenet5Pred.csv
-│   │   ├── clean_o_dups_Lenet5Pred.csv
-│   │   ├── clean_o_outliers_Lenet5Pred.csv
-│   │   ├── clean_w_dups_Lenet5Pred.csv
-│   │   ├── clean_w_outliers_Lenet5Pred.csv
-│   │   └── clean_wo_dups_Lenet5Pred.csv
-│   └── SP_Model
-│       ├── concatenated
-│       │   ├── clean_all_outliers_spPred.csv
-│       │   ├── clean_duplicates_spPred.csv
-│       │   ├── clean_o_dups_spPred.csv
-│       │   ├── clean_o_outliers_spPred.csv
-│       │   ├── clean_w_dups_spPred.csv
-│       │   ├── clean_w_outliers_spPred.csv
-│       │   └── clean_wo_dups_spPred.csv
-│       ├── flipped_only
-│       │   ├── clean_all_outliers_spPred.csv
-│       │   ├── clean_duplicates_spPred.csv
-│       │   ├── clean_o_dups_spPred.csv
-│       │   ├── clean_o_outliers_spPred.csv
-│       │   ├── clean_w_dups_spPred.csv
-│       │   ├── clean_w_outliers_spPred.csv
-│       │   └── clean_wo_dups_spPred.csv
-│       └── raw_datasets
-│           ├── clean_all_outliers_spPred.csv
-│           ├── clean_duplicates_spPred.csv
-│           ├── clean_o_dups_spPred.csv
-│           ├── clean_o_outliers_spPred.csv
-│           ├── clean_w_dups_spPred.csv
-│           ├── clean_w_outliers_spPred.csv
-│           └── clean_wo_dups_spPred.csv
+│   ├── JCW_Model
+│   │   ├── clean_wo_dups_jcwPred.csv
+│   │   ├── clean_wo_dups_jcwPred_flipped_append.csv
+│   │   ├── clean_wo_dups_jcwPred_nobatch.csv
+│   │   ├── clean_wo_dups_jcwPred_nobatch_nobias.csv
+│   │   ├── combined_clean_all_outliers_spPred.csv
+│   │   ├── combined_clean_o_dups_Lenet5Pred.csv
+│   │   ├── combined_clean_o_outliers_jcwPred.csv
+│   │   ├── combined_clean_w_outliers_jcwPred.csv
+│   │   └── combined_clean_wo_dups_jcwPred.csv
+│   ├── LeNet5
+│   │   ├── clean_all_outliers_Lenet5Pred.csv
+│   │   ├── clean_duplicates_Lenet5Pred.csv
+│   │   ├── clean_o_dups_Lenet5Pred.csv
+│   │   ├── clean_o_outliers_Lenet5Pred.csv
+│   │   ├── clean_w_dups_Lenet5Pred.csv
+│   │   ├── clean_w_outliers_Lenet5Pred.csv
+│   │   └── clean_wo_dups_Lenet5Pred.csv
+│   └── SP_Model
+│       ├── concatenated
+│       │   ├── clean_all_outliers_spPred.csv
+│       │   ├── clean_duplicates_spPred.csv
+│       │   ├── clean_o_dups_spPred.csv
+│       │   ├── clean_o_outliers_spPred.csv
+│       │   ├── clean_w_dups_spPred.csv
+│       │   ├── clean_w_outliers_spPred.csv
+│       │   └── clean_wo_dups_spPred.csv
+│       ├── flipped_only
+│       │   ├── clean_all_outliers_spPred.csv
+│       │   ├── clean_duplicates_spPred.csv
+│       │   ├── clean_o_dups_spPred.csv
+│       │   ├── clean_o_outliers_spPred.csv
+│       │   ├── clean_w_dups_spPred.csv
+│       │   ├── clean_w_outliers_spPred.csv
+│       │   └── clean_wo_dups_spPred.csv
+│       └── raw_datasets
+│           ├── clean_all_outliers_spPred.csv
+│           ├── clean_duplicates_spPred.csv
+│           ├── clean_o_dups_spPred.csv
+│           ├── clean_o_outliers_spPred.csv
+│           ├── clean_w_dups_spPred.csv
+│           ├── clean_w_outliers_spPred.csv
+│           └── clean_wo_dups_spPred.csv
 ├── README.md
+├── cleantrain
+│   ├── clean_all_outliers.p
+│   ├── clean_duplicates.p
+│   ├── clean_o_dups.p
+│   ├── clean_o_outliers.p
+│   ├── clean_w_dups.p
+│   ├── clean_w_outliers.p
+│   └── clean_wo_dups.p
 ├── data
-│   ├── IdLookupTable.csv
-│   ├── SampleSubmission.csv
-│   ├── kaggle_files.zip
+│   ├── IdLookupTable.csv
+│   ├── SampleSubmission.csv
+│   ├── kaggle_files.zip
 ├── deliverables
-│   ├── README.md
-│   └── initial_modelling.pdf
+│   ├── README.md
+│   └── initial_modelling.pdf
 ├── images
-│   ├── Lenet5\ Results
-│   │   ├── Lenet_flow.png
-│   │   ├── all_clean_output.jpg
-│   │   ├── all_outliers.jpg
-│   │   ├── aug_clean_all_outliers.jpg
-│   │   ├── best_score.jpg
-│   │   ├── duplicates.jpg
-│   │   ├── layer_bd_score.jpg
-│   │   ├── layer_hf_output.jpg
-│   │   ├── layers_output.jpg
-│   │   ├── layers_score.jpg
-│   │   ├── o_duplicates.jpg
-│   │   ├── o_outliers.jpg
-│   │   ├── raw_model_output.jpg
-│   │   ├── raw_submission.jpg
-│   │   ├── top_three_results.jpg
-│   │   ├── w_duplicates.jpg
-│   │   ├── w_outliers.jpg
-│   │   ├── w_outliers2.jpg
-│   │   └── wo_duplicates.jpg
-│   ├── Model\ SP
-│   │   ├── model_flow.png
-│   │   └── top_3_models.png
-│   ├── all_clean_files.jpg
-│   ├── clean_wo_dups_jcw_layerplot.png
-│   └── transformations.png
+│   ├── Lenet5\ Results
+│   │   ├── 3rd_best.jpg
+│   │   ├── Lenet_flow.png
+│   │   ├── Lenet_layerplot.png
+│   │   ├── all_clean_output.jpg
+│   │   ├── all_outliers.jpg
+│   │   ├── aug_clean_all_outliers.jpg
+│   │   ├── best_score.jpg
+│   │   ├── combined_wf.jpg
+│   │   ├── duplicates.jpg
+│   │   ├── layer_bd_score.jpg
+│   │   ├── layer_hf_output.jpg
+│   │   ├── layers_output.jpg
+│   │   ├── layers_score.jpg
+│   │   ├── o_duplicates.jpg
+│   │   ├── o_outliers.jpg
+│   │   ├── overall_best_score.jpg
+│   │   ├── raw_model_output.jpg
+│   │   ├── raw_submission.jpg
+│   │   ├── top_three_results.jpg
+│   │   ├── w_duplicates.jpg
+│   │   ├── w_outliers.jpg
+│   │   ├── w_outliers2.jpg
+│   │   └── wo_duplicates.jpg
+│   ├── Model\ SP
+│   │   ├── model_flow.png
+│   │   └── top_3_models.png
+│   ├── all_clean_files.jpg
+│   ├── clean_wo_dups_jcw_layerplot.png
+│   └── transformations.png
 ├── models
-│   ├── JCW_Model.ipynb
-│   ├── Lenet5_Model.ipynb
-│   ├── SP_model.ipynb
-│   └── initial_models.ipynb
+│   ├── JCW_Model.ipynb
+│   ├── Lenet5_Model.ipynb
+│   ├── SP_model.ipynb
+│   └── initial_models.ipynb
 ├── models_no_output
-│   ├── JCW_Model.ipynb
-│   ├── Lenet5_Model.ipynb
-│   ├── SP_model.ipynb
-│   └── initial_models.ipynb
+│   ├── JCW_Model.ipynb
+│   ├── Lenet5_Model.ipynb
+│   ├── SP_model.ipynb
+│   └── initial_models.ipynb
 └── utils
     ├── load_models.py
     ├── predict_models.py
     └── transform_data.py
-    
+
 ```
 
 Below is a list of files found in this repository along with a brief description.
@@ -359,11 +375,11 @@ Below is a list of files found in this repository along with a brief description
 |[`models/initial_models.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models/initial_models.ipynb)| Notebook includes all the initials models that were tried with cleaned data|
 |[`models/JCW_Model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models/JCW_Model.ipynb)| Notebook with models and results built by Joanie|
 |[`models/Lenet5_Model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models/Lenet5_Model.ipynb)| Notebook with models and results built by Jackie|
-|[`models/Lenet5_Model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models/SP_model.ipynb)| Notebook with models and results build by Sandip|
-|[`models_no_output/Lenet5_Model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models_no_output/initial_models.ipynb)| Notebook includes all the initials models that were tried with cleaned data without outputs|
-|[`models_no_output/Lenet5_Model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models_no_output/JCW_Model.ipynb)| Notebook with models built by Joanie excluding outputs|
+|[`models/Sandip_model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models/SP_model.ipynb)| Notebook with models and results build by Sandip|
+|[`models_no_output/initial_models.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models_no_output/initial_models.ipynb)| Notebook includes all the initials models that were tried with cleaned data without outputs|
+|[`models_no_output/JCW_Model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models_no_output/JCW_Model.ipynb)| Notebook with models built by Joanie excluding outputs|
 |[`models_no_output/Lenet5_Model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models_no_output/Lenet5_Model.ipynb)| Notebook with models built by Jackie excluding outputs|
-|[`models_no_output/Lenet5_Model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models_no_output/SP_model.ipynb)| Notebook with models built by Sandip excluding outputs|
+|[`models_no_output/SP_model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models_no_output/SP_model.ipynb)| Notebook with models built by Sandip excluding outputs|
 |[`utils/load_models.py`](https://github.com/jcweaver/blackboxes/blob/master/utils/load_models.py)| Python Utility-tool to load models|
 |[`utils/predict_models.py`](https://github.com/jcweaver/blackboxes/blob/master/utils/predict_models.py)| Python Utility-tool to run predictions with a given model and data set|
 |[`utils/transform_data.py`](https://github.com/jcweaver/blackboxes/blob/master/utils/transform_data.py)| Python Utility-tool apply transformations on a given data set|
