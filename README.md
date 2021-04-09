@@ -212,7 +212,9 @@ In terms of approach, the model and parameters themselves were not changed, but 
 Approach 1: All datasets as they were.</br>
 Approach 2: Flipped images.</br>
 Approach 3: Concatenated original datasets + flipped images (i.e. double size).</br>
-Approach 4: Combination of 8 Keypoints and 30 Keypoints predictions (see JCW and JN for more information on methodology).</br>
+Approach 4: Combination of 8 Keypoints and 30 Keypoints predictions from Approach 1 (see JCW and JN for more information on methodology).</br>
+Approach 5: Combination of 8 Keypoints and 30 Keypoints predictions from Approach 2.</br>
+Appeoach 6: Combination of 8 Keypoints and 30 Keypoints predictions from Approach 3.</br>
 
 ![](https://github.com/jcweaver/blackboxes/blob/master/images/Model%20SP/top_3_models.png)
 
