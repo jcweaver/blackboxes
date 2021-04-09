@@ -423,6 +423,11 @@ class LoadTrainModels(object):
         model_json_file = "".join([self.__model_dir, model_name,".json"])
         model_plot_name = "".join([self.__model_dir, model_name,"_plot.png"])
         model_layer_plot = "".join([self.__model_dir, model_name,"_layerplot.png"])
+        
+        #Code for combined model approach
+        num_features = 30
+        if separate:
+            num_features = 8
 
         if verbose:
             print("Looking for model SP")
@@ -472,7 +477,7 @@ class LoadTrainModels(object):
             model.add(Dense(500))
             model.add(Activation('relu'))
 
-            model.add(Dense(30))
+            model.add(Dense(num_features))
 
             if verbose:
                 print(model.summary())
@@ -566,7 +571,7 @@ class LoadTrainModels(object):
         elif "jcw" in model_name:
             model, history = self.__get_model_jcw(model_name, X = X, Y = Y, l_batch_size = 128, l_epochs = 300, l_shuffle = True,separate=separate)
         elif "sp" in model_name:
-            model, history = self.__get_model_sp(model_name, X = X, Y = Y, l_batch_size = 128, l_epochs = 300, l_shuffle = True)
+            model, history = self.__get_model_sp(model_name, X = X, Y = Y, l_batch_size = 128, l_epochs = 300, l_shuffle = True, separate=separate)
         else:
             raise RuntimeError("Incorrect model name. Please verify and try again." )
         return model, history
