@@ -380,16 +380,17 @@ Below is a list of files found in this repository along with a brief description
 |[`models_no_output/JCW_Model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models_no_output/JCW_Model.ipynb)| Notebook with models built by Joanie excluding outputs|
 |[`models_no_output/Lenet5_Model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models_no_output/Lenet5_Model.ipynb)| Notebook with models built by Jackie excluding outputs|
 |[`models_no_output/SP_model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models_no_output/SP_model.ipynb)| Notebook with models built by Sandip excluding outputs|
-|[`utils/load_models.py`](https://github.com/jcweaver/blackboxes/blob/master/utils/load_models.py)| Python Utility-tool to load models|
-|[`utils/predict_models.py`](https://github.com/jcweaver/blackboxes/blob/master/utils/predict_models.py)| Python Utility-tool to run predictions with a given model and data set|
-|[`utils/transform_data.py`](https://github.com/jcweaver/blackboxes/blob/master/utils/transform_data.py)| Python Utility-tool apply transformations on a given data set|
-|[`data`](https://github.com/jcweaver/blackboxes/blob/master/data)| Directory with dataset|
+|[`utils/load_models.py`](https://github.com/jcweaver/blackboxes/blob/master/utils/load_models.py)| Custom Python Utility-tool to load, train and fit models|
+|[`utils/predict_models.py`](https://github.com/jcweaver/blackboxes/blob/master/utils/predict_models.py)| Custom Python Utility-tool to run predictions with a given model and data set, and save to CSV|
+|[`utils/transform_data.py`](https://github.com/jcweaver/blackboxes/blob/master/utils/transform_data.py)| Custom Python Utility-tool apply transformations on a given data set|
+|[`data`](https://github.com/jcweaver/blackboxes/blob/master/data)| Directory with datasets Note: some too large to store|
 |[`data/train.p`](https://github.com/jcweaver/blackboxes/blob/master/data/train.p)| Pickle-file with Cleaned Train-data|
 |[`data/test.p`](https://github.com/jcweaver/blackboxes/blob/master/data/test.p)| Pickle-file with Cleaned Test-data|
 |[`data/traindup.p`](https://github.com/jcweaver/blackboxes/blob/master/data/traindup.p)| Pickle-file with Cleaned train-data and duplicates removed.|
 |[`data/testdup.p`](https://github.com/jcweaver/blackboxes/blob/master/data/testdup.p)| Pickle-file with Cleaned test-data and duplicates removed.|
 |[`deliverables/initial_modelling.pdf`](https://github.com/jcweaver/blackboxes/blob/master/deliverables/initial_modelling.pdf)| PDF document with details of initial models|
-|[`deliverables/w207 P4 initial_modelling.pptx`](https://github.com/jcweaver/blackboxes/blob/master/deliverables/w207%20P4%20initial_modelling.pptx)| Final Presentation slide-deck.|
+|[`deliverables/w207 P4 initial_modelling.pptx`](https://github.com/jcweaver/blackboxes/blob/master/deliverables/w207%20P4%20initial_modelling.pptx)| Check-in Presentation slide-deck.|
+|[`deliverables/w207 P4 initial_modelling.pptx`](https://github.com/jcweaver/blackboxes/blob/master/deliverables/w207%20P4%20initial_modelling.pptx)| Final Presentation slide-deck. TBD-NEED TO ADD THIS|
 |[`Predictions/JCW_Model`](https://github.com/jcweaver/blackboxes/blob/master/Predictions/JCW_Model)| Prediction Submission for Models built by Joanie|
 |[`Predictions/LeNet5`](https://github.com/jcweaver/blackboxes/blob/master/Predictions/LeNet5)| Prediction Submission for Models built by Jackie|
 |[`Predictions/SP_Model`](https://github.com/jcweaver/blackboxes/blob/master/Predictions/SP_Model)| Prediction Submission for Models built by Sandip|
