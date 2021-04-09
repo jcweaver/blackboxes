@@ -7,9 +7,10 @@ ref: https://www.kaggle.com/c/facial-keypoints-detection
 
 ## Summary
 
-This repo contains work performed by Joanie Weaver, Sandip Panesar, Jackie Nichols, Rakesh Walisheter for the [Kaggle Facial Keypoint Detection](https://www.kaggle.com/c/facial-keypoints-detection) challenge as our final project for W207. This notebook contains several different neural networks with the Lenet5 inspired approach yielding the best result of 3.23581 placing at position 72 on the leaderboard
+This repo contains work performed by Joanie Weaver, Sandip Panesar, Jackie Nichols, Rakesh Walisheter for the [Kaggle Facial Keypoint Detection](https://www.kaggle.com/c/facial-keypoints-detection) challenge as our final project for W207. This notebook contains several different neural networks with the Lenet5 inspired approach yielding the best result of **2.48797** placing at position 51 on the leaderboard
 
-![](https://i.imgur.com/kbpD4Eo.jpg) 
+
+![](https://i.imgur.com/BiDsWBP.jpg) 
 
 
 ### The Challenge
