@@ -204,13 +204,14 @@ This model was based upon a blog post entitled ["Achieving Top 23% in Kaggle's F
 
 The model takes a 4D input dataset (1, 96, 96, 1) and has 3 x 2D convolution layers with 32-64-128 filters (doubles each layer). Each convolutional layer is followed by a 2x2 max-pooling layer and there are 2 fully-connected layers. The densely-connected layers have 500 units each. The model uses rectified linear unit (‘ReLU’) activation in each layer, a Nesterov-accelerated gradient descent (SGD) optimizer with a learning rate of 0.01 and a momentum parameter of 0.9. The model was trained using batches of 128 examples, and for 300 epochs. 
 
-This model achieved modest performance in terms of the metrics of interest, and performed best using the cleaned dataset with overlapping outliers (Kaggle score 4.15), which is between 140-150th position on the leaderboard. 
+This model performed best using Approach 4 (see below), using a method that combines predictions of models trained using 8 keypoints of data (i.e. the variables with the most complete/least missing data) together with predictions from models trained on 30 keypoints for the samples in the testing dataset that required all 30. The top 3 positions were taken with scores generated using this methodology. 
 
 In terms of approach, the model and parameters themselves were not changed, but I tested it using various data transformations:
 
 Approach 1: All datasets as they were.</br>
 Approach 2: Flipped images.</br>
 Approach 3: Concatenated original datasets + flipped images (i.e. double size).</br>
+Approach 4: Combination of 8 Keypoints and 30 Keypoints predictions (see JCW and JN for more information on methodology).</br>
 
 The best score was with approach 1, however in positions 2 and 3 were data using the concatenated dataset (approach 3):
 
