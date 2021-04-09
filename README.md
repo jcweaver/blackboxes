@@ -370,7 +370,7 @@ Below is a list of files found in this repository along with a brief description
 |[`data/traindup.p`](https://github.com/jcweaver/blackboxes/blob/master/data/traindup.p)| Pickle-file with Cleaned train-data and duplicates removed.|
 |[`data/testdup.p`](https://github.com/jcweaver/blackboxes/blob/master/data/testdup.p)| Pickle-file with Cleaned test-data and duplicates removed.|
 |[`deliverables/initial_modelling.pdf`](https://github.com/jcweaver/blackboxes/blob/master/deliverables/initial_modelling.pdf)| PDF document with details of initial models|
-|[`deliverables/w207 P4 initial_modelling.pptx`](https://github.com/jcweaver/blackboxes/blob/master/deliverables/w207 P4 initial_modelling.pptx)| Final Presentation slide-deck.|
-|[`Predictions/JCW_Model](https://github.com/jcweaver/blackboxes/blob/master/Predictions/JCW_Model)| Prediction Submission for Models built by Joanie|
-|[`Predictions/LeNet5](https://github.com/jcweaver/blackboxes/blob/master/Predictions/JCW_Model)| Prediction Submission for Models built by Jackie|
-|[`Predictions/JCW_Model](https://github.com/jcweaver/blackboxes/blob/master/Predictions/JCW_Model)| Prediction Submission for Models built by Sandip|
+|[`deliverables/w207 P4 initial_modelling.pptx`](https://github.com/jcweaver/blackboxes/blob/master/deliverables/w207%20P4%20initial_modelling.pptx)| Final Presentation slide-deck.|
+|[`Predictions/JCW_Model`](https://github.com/jcweaver/blackboxes/blob/master/Predictions/JCW_Model)| Prediction Submission for Models built by Joanie|
+|[`Predictions/LeNet5`](https://github.com/jcweaver/blackboxes/blob/master/Predictions/JCW_Model)| Prediction Submission for Models built by Jackie|
+|[`Predictions/JCW_Model`](https://github.com/jcweaver/blackboxes/blob/master/Predictions/JCW_Model)| Prediction Submission for Models built by Sandip|
