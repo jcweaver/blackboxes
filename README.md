@@ -150,11 +150,11 @@ All training for all models was fixed at a 128 batch size, 300 epochs with a pat
 
 `lss = 'mean_squared_error'`
 
-The best result was from approach 2 from the model using the clean data with all outliers removed yielding: 3.23581  
+The best result was from approach 2 from the model using the clean data with all outliers removed yielding: 2.48797  
 
-Placing at position 72 on the leaderboard
+Placing at position 51 on the leaderboard
 
-![](https://i.imgur.com/kbpD4Eo.jpg)
+![](https://i.imgur.com/BiDsWBP.jpg)
 
 The best performing model plot can be see below: 
 
