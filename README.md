@@ -30,10 +30,10 @@ The Kaggle facial detection challenge asks participants to identify the (x,y) co
 
 ### Performance
 
-This solution acheives a best score of **3.23581** using the Lenet5 inspired model, which places 72 place on the locked leaderboard. 
+This solution acheives a best score of **2.48797** using the Lenet5 inspired model, which places 51 place on the locked leaderboard. 
 
 ## Project Approach
-To reach the final output of the project and to support the summary findings above, TBD
+To reach the final output of the project and to support the summary findings above, we decided to each work on a model that inspired us.  A framework was developed to make creating models and predictions easier for the team. 
 
 ### Completed Tasks
 
