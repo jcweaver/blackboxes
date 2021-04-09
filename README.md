@@ -375,11 +375,11 @@ Below is a list of files found in this repository along with a brief description
 |[`models/initial_models.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models/initial_models.ipynb)| Notebook includes all the initials models that were tried with cleaned data|
 |[`models/JCW_Model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models/JCW_Model.ipynb)| Notebook with models and results built by Joanie|
 |[`models/Lenet5_Model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models/Lenet5_Model.ipynb)| Notebook with models and results built by Jackie|
-|[`models/Lenet5_Model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models/SP_model.ipynb)| Notebook with models and results build by Sandip|
-|[`models_no_output/Lenet5_Model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models_no_output/initial_models.ipynb)| Notebook includes all the initials models that were tried with cleaned data without outputs|
-|[`models_no_output/Lenet5_Model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models_no_output/JCW_Model.ipynb)| Notebook with models built by Joanie excluding outputs|
+|[`models/Sandip_model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models/SP_model.ipynb)| Notebook with models and results build by Sandip|
+|[`models_no_output/initial_models.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models_no_output/initial_models.ipynb)| Notebook includes all the initials models that were tried with cleaned data without outputs|
+|[`models_no_output/JCW_Model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models_no_output/JCW_Model.ipynb)| Notebook with models built by Joanie excluding outputs|
 |[`models_no_output/Lenet5_Model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models_no_output/Lenet5_Model.ipynb)| Notebook with models built by Jackie excluding outputs|
-|[`models_no_output/Lenet5_Model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models_no_output/SP_model.ipynb)| Notebook with models built by Sandip excluding outputs|
+|[`models_no_output/SP_model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models_no_output/SP_model.ipynb)| Notebook with models built by Sandip excluding outputs|
 |[`utils/load_models.py`](https://github.com/jcweaver/blackboxes/blob/master/utils/load_models.py)| Python Utility-tool to load models|
 |[`utils/predict_models.py`](https://github.com/jcweaver/blackboxes/blob/master/utils/predict_models.py)| Python Utility-tool to run predictions with a given model and data set|
 |[`utils/transform_data.py`](https://github.com/jcweaver/blackboxes/blob/master/utils/transform_data.py)| Python Utility-tool apply transformations on a given data set|
