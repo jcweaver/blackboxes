@@ -213,8 +213,6 @@ Approach 2: Flipped images.</br>
 Approach 3: Concatenated original datasets + flipped images (i.e. double size).</br>
 Approach 4: Combination of 8 Keypoints and 30 Keypoints predictions (see JCW and JN for more information on methodology).</br>
 
-The best score was with approach 1, however in positions 2 and 3 were data using the concatenated dataset (approach 3):
-
 ![](https://github.com/jcweaver/blackboxes/blob/master/images/Model%20SP/top_3_models.png)
 
 The model plot can be seen below:
