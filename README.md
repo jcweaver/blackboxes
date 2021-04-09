@@ -374,3 +374,4 @@ Below is a list of files found in this repository along with a brief description
 |[`Predictions/JCW_Model`](https://github.com/jcweaver/blackboxes/blob/master/Predictions/JCW_Model)| Prediction Submission for Models built by Joanie|
 |[`Predictions/LeNet5`](https://github.com/jcweaver/blackboxes/blob/master/Predictions/LeNet5)| Prediction Submission for Models built by Jackie|
 |[`Predictions/SP_Model`](https://github.com/jcweaver/blackboxes/blob/master/Predictions/SP_Model)| Prediction Submission for Models built by Sandip|
+|[`images`](https://github.com/jcweaver/blackboxes/blob/master/images)| Screenshots and graph plots|
