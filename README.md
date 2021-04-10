@@ -189,14 +189,18 @@ Approach 6: Brightening the data with flipped data appended
 There was some success with this but it didn't reach a new high score
 
 Approach 7: Appending the data with flipped images and brightened images
+There was some success with this
 
 Approach 8: Run a model on data that has all 8 keypoints and output a model that only predicts 8 keypoints. Use this model to make predictions for all of the test cases that only require 8 keypoints and then fill in the missing data for the remaining test cases from a prior predictions file.
 
-The best score this model achieved was when it was run using the training data with the flipped version of the training data appended. The training data file for this was with the set "clean_wo_dups", which was removing all duplicates, overlap outliers, and the worst outliers, which are the 4 mislabelled images and 4 worst images (two collages which are duplicates and two cartoons). This had a Kaggle score of 3.65.
+The best score this model achieved was when it was run using the training data itself with the flipped version of the training data appended and brightened versions of the training data appended. The training data file for this was with the set "clean_wo_dups", which was removing all duplicates, overlap outliers, and the worst outliers, which are the 4 mislabelled images and 4 worst images (two collages which are duplicates and two cartoons). This had a Kaggle score of 3.55.
 
-The best overall score was running a model on data that had all 8 keypoints and outputing only 8 predictions then using data from another predictions file for the remaining test cases that required more than 8 keypoints. This model had a score of 3.40 on Kaggle.
+The best overall score was running a model on data that had all 8 keypoints and outputing only 8 predictions then using data from another predictions file for the remaining test cases that required more than 8 keypoints using the training data itself with the flipped version of the training data appended and brightened versions of the training data appended. This model had a score of 2.80 on Kaggle. This model resulted in the overall top three scores on Kaggle.
+
+![](https://github.com/jcweaver/blackboxes/blob/master/images/top_three_.png)
 
 The base model plot is below:
+
 ![](https://github.com/jcweaver/blackboxes/blob/master/images/clean_wo_dups_jcw_layerplot.png)
 
 4.2.4 **Model 3 (SP)**
