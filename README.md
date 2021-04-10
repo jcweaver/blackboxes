@@ -143,7 +143,8 @@ The following variations of models were created:
 - Approach 1: 7 previously mentioned versions of cleaned train data (clean section) set were used to create models and predictions (best result came from this test)
 - Approach 2: 7 previously mentioned versions of cleaned train data (clean section) set were used + varying the layers in the model used to create models and predictions
 - Approach 3: 7 previously mentioned versions of cleaned train data (clean section) set were used + varying layers + image augmentation (brightness and dim) to create models and predictions
-- Approach 4: 7 previously mentioned versions of cleaned train data (clean section) set were used + varying layers + image augmentation (horizontal flip) to create models and predictions
+- Approach 4: use different cleaned versions of train data set flip the images, add brigthness=0 dim = 0 for 30 keypoints and 8 keypoints. 
+- Approach 5: use only clean_all_outliers of train data set flip the images, add brigthness=1.4 dim = 0.3 for 30 keypoints and 8 keypoints 
 
 All training for all models was fixed at a 128 batch size, 300 epochs with a patience set at 30 (with early stop set). Adam optimization was used with an initial learning rate of 0.01 and later changed to 0.001, beta of 0.9, beta2 of 0.999 and epsilon=1e-8 (following standards and examples)
 
@@ -151,7 +152,7 @@ All training for all models was fixed at a 128 batch size, 300 epochs with a pat
 
 `lss = 'mean_squared_error'`
 
-The best result was from approach 2 from the model using the clean data with all outliers removed yielding: 2.48797  
+The best result was from approach 5 from the model using the clean data with all outliers removed and combining 30 keypoints with 8 keypoints yielding: 2.48797  
 
 Placing at position 51 on the leaderboard
 
@@ -160,6 +161,10 @@ Placing at position 51 on the leaderboard
 The best performing model plot can be see below: 
 
 ![](https://i.imgur.com/ltAzPj6.png)
+
+Overall, these model and approaches best 3 scores were:
+
+![](https://i.imgur.com/MpgWZel.jpg)
 
 
 4.2.2 **Model 2 (JCW)**
