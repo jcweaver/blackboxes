@@ -95,7 +95,7 @@ f. Random Forest Regression (with 5 estimators)<br />
 
 In general, performance varied between models and datasets, with the linear, lasso and ridge regression models, and decision tree regression, giving very poor (negative $\R^2$) performance. Best performance was achieved using K-Nearest Neighbors regression with 7 neighbors and using the raw dataset. This might be because the raw dataset, as opposed to the duplicate-removed dataset gives more training examples. Random forest regression performed slightly worse than the K-Nearest Neighbors models, but still better than the others, with optimal performance given using the augmented dataset. Another interesting finding from this initial modelling process is that angled faces, eyeglasses and childrens faces seemed to pose the biggest predictive challenge for these baseline models.
 
-The notebook for the baseline models can be found [`here`](https://github.com/jcweaver/blackboxes/blob/master/models/initial_models.ipynb)
+The notebook for the baseline models can be found [`here`](https://github.com/jcweaver/blackboxes/blob/master/models/initial_models.ipynb) and a summary of their results can be found [`here`](https://github.com/jcweaver/blackboxes/blob/master/deliverables/initial_modelling.pdf).
 
 4.2 **Final Models**
 
