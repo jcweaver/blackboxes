@@ -130,7 +130,8 @@ Note: Each notebook above contains output after each cell making the files quite
 |[`models_no_output/JCW.Model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models_no_output/JCW_Model.ipynb)|A notebook of a model inspired by Sinya Yuki's approach.|
 |[`models_no_output/SP_model.ipynb`](https://github.com/jcweaver/blackboxes/blob/master/models_no_output/SP_model.ipynb)|A notebook of a model inspired by Daniel Nouri's approach to this challenge.|
 
-
+Note: some transformations were inspired by:
+    #  https://www.kaggle.com/balraj98/data-augmentation-for-facial-keypoint-detection
 
 4.2.1 **Model 1 (JN)/LeNet5 Inspired**
 
